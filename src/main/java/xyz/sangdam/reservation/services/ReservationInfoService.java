@@ -1,0 +1,116 @@
+package xyz.sangdam.reservation.services;
+
+import xyz.sangdam.global.ListData;
+import xyz.sangdam.global.Pagination;
+import xyz.sangdam.reservation.controllers.ReservationSearch;
+import xyz.sangdam.reservation.entities.QReservation;
+import xyz.sangdam.reservation.entities.Reservation;
+import xyz.sangdam.reservation.exceptions.ReservationNotFoundException;
+import xyz.sangdam.reservation.repositories.ReservationRepository;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.List;
+
+import static org.springframework.data.domain.Sort.Order.desc;
+
+@Service
+@RequiredArgsConstructor
+public class ReservationInfoService {
+
+    private final HttpServletRequest request; // 검색어 반영된 쿼리스트링 값
+    private final ReservationRepository reservationRepository;
+    private final JPAQueryFactory queryFactory;
+    /**
+     * 목록 조회
+     * @param search
+     * @return
+     */
+    public ListData<Reservation> getList(ReservationSearch search) {
+        int page = Math.max(search.getPage(), 1); // 페이지가 0이거나 음수이면 1이 나오도록 설정
+        int limit = search.getLimit(); // 한페이지당 보여줄 레코드 개수
+        limit = limit < 1 ? 10 : limit;
+        int offset = (page -1) * limit; // 레코드 시작 위치 구하기
+
+        /* 검색 처리 S */
+        QReservation reservation = QReservation.reservation;
+        BooleanBuilder andBuilder = new BooleanBuilder();
+
+        // 키워드 검색
+        String sopt = search.getSopt(); // 검색 옵션 All - 통합 검색
+        String skey = search.getSkey();  // 검색 키워드를 통한 검색 ex) 음식분류, 옵션 검색
+        String rName = search.getRName(); // rName - 예약한 식당명
+
+        sopt = StringUtils.hasText(sopt) ? sopt : "All"; // 통합검색이 기본
+        // 키워드가 있을 때 조건별 검색
+        if (StringUtils.hasText(skey) && StringUtils.hasText(skey.trim())) {
+            /**
+             * sopt
+             * ALL - 통합 검색 - RNAME, RADDRESS, RTEL
+             * RNAME, RTEL, RADDRESS
+             */
+            sopt = sopt.trim();
+            skey = skey.trim();
+
+            BooleanExpression condition = null;
+            if(sopt.equals("ALL")) {
+                // 통합 검색
+                condition = reservation.rName.concat(reservation.rAddress).concat(reservation.rTel).contains(skey);
+            } else if (sopt.equals("RNAME")) { // 식당명
+                condition = reservation.rName.contains(skey);
+
+            } else if (sopt.equals("RADDRESS")) { // 식당 주소
+                condition = reservation.rAddress.contains(skey);
+
+            } else if (sopt.equals("RTEL")) { // 식당 연락처
+                skey = skey.replaceAll("-", ""); // 숫자만 남긴다
+                condition = reservation.rTel.contains(skey);
+            }
+
+            if (condition != null) {
+                andBuilder.and(condition);
+            }
+        }
+        /* 검색 처리 E */
+
+
+
+
+
+        Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(desc("createdAt")));
+        Page<Reservation> data = reservationRepository.findAll(andBuilder, pageable);
+        Pagination pagination = new Pagination(page, (int) data.getTotalElements(), 10, limit, request);
+        List<Reservation> items = data.getContent();
+        items.forEach(this::addInfo);
+
+        return new ListData<>(items,pagination);
+    }
+
+    public Reservation get(Long orderNo) {
+        Reservation item = reservationRepository.findById(orderNo).orElseThrow(ReservationNotFoundException::new);
+
+        // 추가 데이터 처리
+        addInfo(item);
+
+        return item;
+    }
+
+    private void addInfo(Reservation item) {
+        int persons = Math.max(item.getPersons(), 1);
+        int price = item.getPrice();
+
+        int totalPayPrice = price * persons;
+        item.setTotalPayPrice(totalPayPrice);
+
+        item.setStatusStr(item.getStatus().getTitle());
+    }
+}
