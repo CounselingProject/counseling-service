@@ -1,8 +1,9 @@
 package xyz.sangdam.counseling.constants;
 
 public enum Status {
-    APPLY, // 신청접수
-    START,  // 상담시작
-    DONE,  // 상담완료
-    CANCEL  // 신청취소
+    APPLY, // 신청접수(예약대기)
+    CONFIRM, // 예약확인
+    CANCEL, // 예약취소
+    REJECT, // 예약반려
+    DONE  // 상담완료
 }
