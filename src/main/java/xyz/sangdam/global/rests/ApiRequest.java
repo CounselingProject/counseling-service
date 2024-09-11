@@ -1,4 +1,4 @@
-package xyz.sangdam.counseling.entities;
+package xyz.sangdam.global.rests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import xyz.sangdam.global.Utils;
-import xyz.sangdam.global.rests.JSONData;
 
 import java.net.URI;
 import java.util.List;
