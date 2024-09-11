@@ -40,6 +40,8 @@ public class QCounseling extends EntityPathBase<Counseling> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> deletedAt = _super.deletedAt;
 
+    public final StringPath gid = createString("gid");
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 
