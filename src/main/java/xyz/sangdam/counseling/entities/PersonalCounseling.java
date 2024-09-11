@@ -13,5 +13,5 @@ public class PersonalCounseling extends Counseling {
 
     @Enumerated(EnumType.STRING)
     @Column(length=20)
-    private Category counselingType; // PROFESSOR 교수 상담, EMPLOYMENT 취업 상담, PSYCHOLOGICAL 심리 상담
+    private Category category; // PROFESSOR 교수 상담, EMPLOYMENT 취업 상담, PSYCHOLOGICAL 심리 상담
 }
