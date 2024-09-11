@@ -40,6 +40,9 @@ public class QGroupReservation extends EntityPathBase<GroupReservation> {
     public final DateTimePath<java.time.LocalDateTime> modifiedAt;
 
     //inherited
+    public final StringPath reason;
+
+    //inherited
     public final StringPath record;
 
     //inherited
@@ -80,6 +83,7 @@ public class QGroupReservation extends EntityPathBase<GroupReservation> {
         this.deletedAt = _super.deletedAt;
         this.email = _super.email;
         this.modifiedAt = _super.modifiedAt;
+        this.reason = _super.reason;
         this.record = _super.record;
         this.reservationDate = _super.reservationDate;
         this.reservationNo = _super.reservationNo;

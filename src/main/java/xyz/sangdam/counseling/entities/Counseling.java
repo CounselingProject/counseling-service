@@ -1,7 +1,9 @@
 package xyz.sangdam.counseling.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
+import xyz.sangdam.counseling.constants.CounselingType;
 import xyz.sangdam.global.entities.BaseMemberEntity;
 
 import java.time.LocalDate;
@@ -12,6 +14,9 @@ import java.time.LocalDate;
 public class Counseling extends BaseMemberEntity {
     @Id @GeneratedValue
     private Long counselingNo;
+
+    @Column(length=45, nullable = false)
+    private String gid;
 
     @Column(length=60, nullable = false)
     private String counselingName; // 상담명
@@ -25,6 +30,13 @@ public class Counseling extends BaseMemberEntity {
     @Column(length=65, nullable = false)
     private String counselorEmail; // 상담사 이메일
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDate reservationSdate; // 신청 시작일시
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDate reservationEdate; // 신청 종료일시
+
+    @Enumerated(EnumType.STRING)
+    @Column(length=20, nullable = false)
+    private CounselingType counselingType; // 개인/집단상담 구분
 }
