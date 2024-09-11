@@ -17,7 +17,7 @@ public class Reservation extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="counselingNo")
-    private Counseling counseling; // 개인 상담 또는 그룹 상담
+    private Counseling counseling; // CounselingType으로 개인/집단상담 구분
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
@@ -37,5 +37,4 @@ public class Reservation extends BaseEntity {
 
     @Lob
     private String record; // 상담 일지(학생별)
-
 }

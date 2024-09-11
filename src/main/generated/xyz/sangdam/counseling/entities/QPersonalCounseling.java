@@ -21,7 +21,7 @@ public class QPersonalCounseling extends EntityPathBase<PersonalCounseling> {
 
     public final QCounseling _super = new QCounseling(this);
 
-    public final EnumPath<xyz.sangdam.counseling.constants.Category> category = createEnum("category", xyz.sangdam.counseling.constants.Category.class);
+    public final EnumPath<xyz.sangdam.counseling.constants.PersonalCategory> category = createEnum("category", xyz.sangdam.counseling.constants.PersonalCategory.class);
 
     //inherited
     public final StringPath counselingName = _super.counselingName;

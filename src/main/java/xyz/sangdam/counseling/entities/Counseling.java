@@ -30,10 +30,10 @@ public class Counseling extends BaseMemberEntity {
     @Column(length=65, nullable = false)
     private String counselorEmail; // 상담사 이메일
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDate reservationSdate; // 신청 시작일시
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDate reservationEdate; // 신청 종료일시
 
     @Enumerated(EnumType.STRING)
