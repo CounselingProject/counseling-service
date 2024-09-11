@@ -21,13 +21,16 @@ public class QPersonalCounseling extends EntityPathBase<PersonalCounseling> {
 
     public final QCounseling _super = new QCounseling(this);
 
+    public final EnumPath<xyz.sangdam.counseling.constants.Category> category = createEnum("category", xyz.sangdam.counseling.constants.Category.class);
+
     //inherited
     public final StringPath counselingName = _super.counselingName;
 
     //inherited
     public final NumberPath<Long> counselingNo = _super.counselingNo;
 
-    public final EnumPath<xyz.sangdam.counseling.constants.Category> counselingType = createEnum("counselingType", xyz.sangdam.counseling.constants.Category.class);
+    //inherited
+    public final EnumPath<xyz.sangdam.counseling.constants.CounselingType> counselingType = _super.counselingType;
 
     //inherited
     public final StringPath counsellingDes = _super.counsellingDes;
@@ -46,6 +49,9 @@ public class QPersonalCounseling extends EntityPathBase<PersonalCounseling> {
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> deletedAt = _super.deletedAt;
+
+    //inherited
+    public final StringPath gid = _super.gid;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;

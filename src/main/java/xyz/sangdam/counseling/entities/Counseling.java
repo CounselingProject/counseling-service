@@ -3,6 +3,7 @@ package xyz.sangdam.counseling.entities;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
+import xyz.sangdam.counseling.constants.CounselingType;
 import xyz.sangdam.global.entities.BaseMemberEntity;
 
 import java.time.LocalDate;
@@ -34,4 +35,8 @@ public class Counseling extends BaseMemberEntity {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate reservationEdate; // 신청 종료일시
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20, nullable = false)
+    private CounselingType counselingType; // 개인 상담 & 집단 상담 구분
 }
