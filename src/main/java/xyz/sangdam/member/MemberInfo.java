@@ -49,6 +49,7 @@ public class MemberInfo implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+
+        return member.getDeletedAt() == null; // getDeletedAt에 값을 넣어주면 회원탈퇴
     }
 }

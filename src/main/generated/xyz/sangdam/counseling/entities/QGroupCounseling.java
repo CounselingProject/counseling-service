@@ -19,49 +19,27 @@ public class QGroupCounseling extends EntityPathBase<GroupCounseling> {
 
     public static final QGroupCounseling groupCounseling = new QGroupCounseling("groupCounseling");
 
-    public final QCounseling _super = new QCounseling(this);
-
     public final DatePath<java.time.LocalDate> counselingEdate = createDate("counselingEdate", java.time.LocalDate.class);
 
     public final NumberPath<Integer> counselingLimit = createNumber("counselingLimit", Integer.class);
 
-    //inherited
-    public final StringPath counselingName = _super.counselingName;
-
-    //inherited
-    public final NumberPath<Long> counselingNo = _super.counselingNo;
+    public final StringPath counselingName = createString("counselingName");
 
     public final DatePath<java.time.LocalDate> counselingSdate = createDate("counselingSdate", java.time.LocalDate.class);
 
-    //inherited
-    public final StringPath counsellingDes = _super.counsellingDes;
+    public final StringPath counsellingDes = createString("counsellingDes");
 
-    //inherited
-    public final StringPath counselorEmail = _super.counselorEmail;
+    public final StringPath counselorEmail = createString("counselorEmail");
 
-    //inherited
-    public final StringPath counselorName = _super.counselorName;
+    public final StringPath counselorName = createString("counselorName");
 
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
+    public final StringPath gid = createString("gid");
 
-    //inherited
-    public final StringPath createdBy = _super.createdBy;
+    public final NumberPath<Long> groupSeq = createNumber("groupSeq", Long.class);
 
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> deletedAt = _super.deletedAt;
+    public final DatePath<java.time.LocalDate> reservationEdate = createDate("reservationEdate", java.time.LocalDate.class);
 
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
-
-    //inherited
-    public final StringPath modifiedBy = _super.modifiedBy;
-
-    //inherited
-    public final DatePath<java.time.LocalDate> reservationEdate = _super.reservationEdate;
-
-    //inherited
-    public final DatePath<java.time.LocalDate> reservationSdate = _super.reservationSdate;
+    public final DatePath<java.time.LocalDate> reservationSdate = createDate("reservationSdate", java.time.LocalDate.class);
 
     public QGroupCounseling(String variable) {
         super(GroupCounseling.class, forVariable(variable));
