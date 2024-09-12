@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import xyz.sangdam.counseling.services.CounselingSaveService;
 import xyz.sangdam.global.rests.JSONData;
 
 @Tag(name="CounselingAdmin", description = "상담 관리자 API")
@@ -15,7 +16,7 @@ import xyz.sangdam.global.rests.JSONData;
 @RequiredArgsConstructor
 public class CounselingAdminController {
     private final HttpServletRequest request;
-
+    private final CounselingSaveService saveService;
     /**
      * - 개인/집담 상담 프로그램 등록,수정,삭제
      * 		- 담임교수 상담, 취업 상담, 심리 상담
@@ -44,7 +45,8 @@ public class CounselingAdminController {
      */
     @Operation(summary = "개인/집단 상담 프로그램 등록", description = "counselingType - PERSONAL : 개인 상담 프로그램, GROUP : 집단 상담 프로그램")
     @PostMapping("/counseling")
-    public ResponseEntity<Void> registerCounseling() {
+    public ResponseEntity<Void> registerCounseling()
+    {
         return save();
     }
 
@@ -55,8 +57,9 @@ public class CounselingAdminController {
         return save();
     }
 
-    public ResponseEntity<Void> save() {
+    public ResponseEntity<Void> save(@RequestBody RequestCounseling form) {
 
+        saveService.save(form);
         HttpStatus status = request.getMethod().toUpperCase().equals("POST") ? HttpStatus.CREATED : HttpStatus.OK;
 
         return ResponseEntity.status(status).build();
