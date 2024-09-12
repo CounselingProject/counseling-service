@@ -8,12 +8,6 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import xyz.sangdam.global.Utils;
-import xyz.sangdam.global.rests.JSONData;
-import xyz.sangdam.member.MemberInfo;
-import xyz.sangdam.member.constants.Authority;
-import xyz.sangdam.member.entities.Authorities;
-import xyz.sangdam.member.entities.Member;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +21,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.GenericFilterBean;
+import xyz.sangdam.global.Utils;
+import xyz.sangdam.global.rests.JSONData;
+import xyz.sangdam.member.MemberInfo;
+import xyz.sangdam.member.constants.UserType;
+import xyz.sangdam.member.entities.Member;
 
 import java.io.IOException;
 import java.util.List;
@@ -74,16 +73,12 @@ public class LoginFilter extends GenericFilterBean {
                 if (data != null && data.isSuccess()) {
                     String json = om.writeValueAsString(data.getData());
                     Member member = om.readValue(json, Member.class);
-                    List<Authorities> tmp = member.getAuthorities();
-                    if (tmp == null || tmp.isEmpty()) {
-                        Authorities authorities = new Authorities();
-                        authorities.setAuthority(Authority.USER);
-                        tmp = List.of(authorities);
-                    }
 
-                    List<SimpleGrantedAuthority> authorities = tmp.stream()
-                            .map(a -> new SimpleGrantedAuthority(a.getAuthority().name()))
-                            .toList();
+                    UserType userType = member.getUserType();
+                    List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(userType.name()));
+                    if (userType == UserType.PROFESSOR) {
+                        authorities.add(new SimpleGrantedAuthority(UserType.COUNSELOR.name()));
+                    }
 
                     MemberInfo memberInfo = MemberInfo.builder()
                             .email(member.getEmail())
