@@ -33,14 +33,29 @@ public class CounselingSaveService {
 
         /* 공통 항목 처리 S */
 
+         counseling.setCounselingType(form.getCounselingType());
+         counseling.setCounselingName(form.getCounselingName());
+            counseling.setCounsellingDes(form.getCounsellingDes());
+            counseling.setCounselorName(form.getCounselorName());
+            counseling.setReservationSdate(form.getReservationSdate());
+            counseling.setReservationEdate(form.getReservationEdate());
+
+
         /* 공통 항목 처리 E */
 
         if (counseling instanceof GroupCounseling groupCounseling) {
             // 집단 상담에 추가할 처리
+            groupCounseling.setCounselingSdate(form.getCounselingSdate()); // 상담시작일
+            groupCounseling.setCounselingEdate(form.getCounselingEdate()); // 상담종료일
+            groupCounseling.setCounselingLimit(form.getCounselingLimit()); // 인원수
+            groupCounseling.setGid(form.getGid()); // 홍보이미지 파일업로드
+
 
             groupRepository.saveAndFlush(groupCounseling);
         } else if (counseling instanceof PersonalCounseling personalCounseling) {
             // 개별 상담에 추가할 처리
+
+            personalCounseling.setCategory(form.getCategory());
 
             personalRepository.saveAndFlush(personalCounseling);
         }
