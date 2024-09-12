@@ -1,14 +1,14 @@
 package xyz.sangdam.member;
 
+
 import lombok.RequiredArgsConstructor;
-import xyz.sangdam.member.constants.Authority;
-import xyz.sangdam.member.entities.Authorities;
-import xyz.sangdam.member.entities.Member;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
+import xyz.sangdam.member.constants.UserType;
+import xyz.sangdam.member.entities.Employee;
+import xyz.sangdam.member.entities.Member;
+import xyz.sangdam.member.entities.Student;
 
 @Component
 @RequiredArgsConstructor
@@ -18,20 +18,32 @@ public class MemberUtil {
         return getMember() != null;
     }
 
-    public boolean isAdmin() {
-        if (isLogin()) {
-            List<Authorities> authorities = getMember().getAuthorities();
-            return authorities.stream().anyMatch(s -> s.getAuthority().equals(Authority.ADMIN));
-        }
-        return false;
+    public boolean isStudent() {
+        return isLogin() && getMember() instanceof Student;
     }
 
-    public Member getMember() {
+    public boolean isAdmin() {
+        Member member = getMember();
+        return isLogin() && member instanceof Employee && member.getUserType() == UserType.ADMIN;
+    }
+
+    public boolean isProfessor() {
+        Member member = getMember();
+        return isLogin() && member instanceof Employee && member.getUserType() == UserType.PROFESSOR;
+    }
+
+    public boolean isCounselor() {
+        Member member = getMember();
+        return isLogin() && member instanceof Employee && member.getUserType() == UserType.COUNSELOR;
+    }
+
+    public <T extends Member> T getMember() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof MemberInfo memberInfo) {
-            return memberInfo.getMember();
+
+            return (T)memberInfo.getMember();
         }
 
         return null;
