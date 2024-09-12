@@ -13,7 +13,11 @@ public class CounselingDeleteService {
     private final GroupCounselingRepository groupRepository;
     private final FileDeleteService fileDeleteService;
     public void delete(Long cNo) {
-
+         // 삭제시엔 파일도 삭제되도록
         // fileDeleteService.delete(gid);
+
+
+
+
     }
 }

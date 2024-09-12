@@ -19,18 +19,19 @@ public class CounselingInfoService {
     private final CounselingRepository counselingRepository; // 목록 조회시
 
 
-    public Counseling get(Long cNo) // 하나 조회 시
+    public Counseling get(Long cNo) // 상담번호로 상담 개별조회 시
     {
         Counseling item = counselingRepository.findById(cNo).orElseThrow(CounselingNotFoundException::new);
-
+/*
         if (CounselingType.PERSONAL == CounselingType.valueOf("personal")) {
             personalRepository.findById(cNo).orElseThrow(CounselingNotFoundException::new);
         }
 
+        // 그룹상담은 한번에 다 나오게끔
         if (CounselingType.GROUP == CounselingType.valueOf("group")) {
             groupRepository.findById(cNo).orElseThrow(CounselingNotFoundException::new);
         }
-
+*/
 
         return item;
     }
@@ -42,9 +43,7 @@ public class CounselingInfoService {
         limit = limit < 1 ? 10 : limit;
         int offset = (page - 1) * limit; // 레코드 시작 위치 구하기
 
-        if (CounselingType.GROUP == CounselingType.valueOf("group")) {
-            groupRepository.findById()
-        }
+        CounselingType counselingType = CounselingType.GROUP;
 
 
         return null;
