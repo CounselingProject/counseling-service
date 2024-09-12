@@ -39,7 +39,7 @@ public class QMember extends EntityPathBase<Member> {
 
     public final StringPath email = createString("email");
 
-    public final NumberPath<Gender> gender = createNumber("gender", Gender.class);
+    public final EnumPath<xyz.sangdam.member.constants.Gender> gender = createEnum("gender", xyz.sangdam.member.constants.Gender.class);
 
     public final StringPath gid = createString("gid");
 
@@ -52,11 +52,11 @@ public class QMember extends EntityPathBase<Member> {
 
     public final NumberPath<Long> seq = createNumber("seq", Long.class);
 
-    public final NumberPath<Status> status = createNumber("status", Status.class);
+    public final EnumPath<xyz.sangdam.member.constants.Status> status = createEnum("status", xyz.sangdam.member.constants.Status.class);
 
     public final StringPath userName = createString("userName");
 
-    public final NumberPath<UserType> userType = createNumber("userType", UserType.class);
+    public final EnumPath<xyz.sangdam.member.constants.UserType> userType = createEnum("userType", xyz.sangdam.member.constants.UserType.class);
 
     public final StringPath zonecode = createString("zonecode");
 
