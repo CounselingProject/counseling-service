@@ -15,6 +15,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import xyz.sangdam.counseling.constants.CounselingType;
 import xyz.sangdam.counseling.controllers.CounselingSearch;
 import xyz.sangdam.counseling.entities.Counseling;
+import xyz.sangdam.counseling.entities.GroupCounseling;
+import xyz.sangdam.counseling.entities.PersonalCounseling;
 import xyz.sangdam.counseling.entities.QCounseling;
 import xyz.sangdam.counseling.repositories.CounselingRepository;
 import xyz.sangdam.counseling.repositories.GroupCounselingRepository;
@@ -22,6 +24,7 @@ import xyz.sangdam.counseling.repositories.PersonalCounselingRepository;
 import xyz.sangdam.global.ListData;
 import xyz.sangdam.global.Pagination;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -81,13 +84,27 @@ public class CounselingInfoService {
         /* 검색 처리 E */
 
         // 검색 조건에 따른 데이터 조회
-        Page<Counseling> pageResult = counselingRepository.findAll(andBuilder, pageable); // Page<Counseling> 사용
-        List<Counseling> items = pageResult.getContent(); // 실제 데이터 리스트
+        List<Counseling> items;
+        long totalElements;
+
+        if ("PERSONAL".equals(search.getCounselingType())) { // 개인 상담 프로그램 조회
+            Page<PersonalCounseling> pageResult = personalRepository.findAll(andBuilder, pageable);
+            items = new ArrayList<>(pageResult.getContent());
+            totalElements = pageResult.getTotalElements();
+        } else if ("GROUP".equals(search.getCounselingType())) { // 그룹 상담 프로그램 조회
+            Page<GroupCounseling> pageResult = groupRepository.findAll(andBuilder, pageable);
+            items = new ArrayList<>(pageResult.getContent());
+            totalElements = pageResult.getTotalElements();
+        } else { // 상담 프로그램 조회 (개인 + 집단)
+            Page<Counseling> pageResult = counselingRepository.findAll(andBuilder, pageable);
+            items = new ArrayList<>(pageResult.getContent());
+            totalElements = pageResult.getTotalElements();
+        }
 
         items.forEach(this::addInfo); // 추가 정보 처리
 
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        Pagination pagination = new Pagination(page, (int) pageResult.getTotalElements(), 10, limit, request);
+        Pagination pagination = new Pagination(page, (int) totalElements, 10, limit, request);
 
         return new ListData<>(items, pagination);
     }
