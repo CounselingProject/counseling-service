@@ -15,8 +15,8 @@ public class Counseling extends BaseMemberEntity {
     @Id @GeneratedValue
     private Long counselingNo;
 
-    @Column(length=45, nullable = false)
-    private String gid;
+    @Column(length = 45, nullable = false)
+    private String gid; // 이미지용 그룹 아이디
 
     @Column(length=60, nullable = false)
     private String counselingName; // 상담명
@@ -37,6 +37,6 @@ public class Counseling extends BaseMemberEntity {
     private LocalDate reservationEdate; // 신청 종료일시
 
     @Enumerated(EnumType.STRING)
-    @Column(length=20, nullable = false)
-    private CounselingType counselingType; // 개인/집단상담 구분
+    @Column(length = 20, nullable = false)
+    private CounselingType counselingType; // 개인 상담 & 집단 상담 구분
 }

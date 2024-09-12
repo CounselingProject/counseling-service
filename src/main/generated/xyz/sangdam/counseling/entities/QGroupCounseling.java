@@ -34,6 +34,9 @@ public class QGroupCounseling extends EntityPathBase<GroupCounseling> {
     public final DatePath<java.time.LocalDate> counselingSdate = createDate("counselingSdate", java.time.LocalDate.class);
 
     //inherited
+    public final EnumPath<xyz.sangdam.counseling.constants.CounselingType> counselingType = _super.counselingType;
+
+    //inherited
     public final StringPath counsellingDes = _super.counsellingDes;
 
     //inherited
@@ -50,6 +53,9 @@ public class QGroupCounseling extends EntityPathBase<GroupCounseling> {
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> deletedAt = _super.deletedAt;
+
+    //inherited
+    public final StringPath gid = _super.gid;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
