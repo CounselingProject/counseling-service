@@ -45,16 +45,16 @@ public class CounselingAdminController {
      */
     @Operation(summary = "개인/집단 상담 프로그램 등록", description = "counselingType - PERSONAL : 개인 상담 프로그램, GROUP : 집단 상담 프로그램")
     @PostMapping("/counseling")
-    public ResponseEntity<Void> registerCounseling()
+    public ResponseEntity<Void> registerCounseling(@RequestBody RequestCounseling form)
     {
-        return save();
+        return save(form);
     }
 
     @Operation(summary = "개인/집담 상담 프로그램 수정", method = "PATCH")
     @PatchMapping("/counseling/{counselingNo}")
-    public ResponseEntity<Void> updateCounseling(@PathVariable("counselingNo") Long cNo) {
+    public ResponseEntity<Void> updateCounseling(@PathVariable("counselingNo") Long cNo , @RequestBody RequestCounseling form) {
 
-        return save();
+        return save(form);
     }
 
     public ResponseEntity<Void> save(@RequestBody RequestCounseling form) {

@@ -33,7 +33,7 @@ public class CounselingSaveService {
 
         /* 공통 항목 처리 S */
 
-         counseling.setCounselingType(form.getCounselingType());
+         counseling.setCounselingType(CounselingType.valueOf(form.getCounselingType()));
          counseling.setCounselingName(form.getCounselingName());
             counseling.setCounsellingDes(form.getCounsellingDes());
             counseling.setCounselorName(form.getCounselorName());
