@@ -12,10 +12,9 @@ public class CounselingSearch extends CommonSearch {
     private String sopt; // 검색 조건
     private String skey; // 검색 키워드
 
-    // 상담명으로 목록을 조회할거냐 타입으로 할거냐 ..
 
     private CounselingType counselingType;
-    private String counselingName;
+    private Long counselingNo;
 
     private String sort; // 정렬 조건
 
