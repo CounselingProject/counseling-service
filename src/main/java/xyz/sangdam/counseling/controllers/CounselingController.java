@@ -41,7 +41,7 @@ public class CounselingController {
 
     @Operation(summary = "개인/집단 신청 목록", description = "type - PERSONAL : 개인 상담 목록<br>GROUP : 집단 상담 목록")
     @GetMapping("/reservation/{type}")
-    public JSONData resevationList(@PathVariable("type") String type, @ModelAttribute ReservationSearch search) {
+    public JSONData reservationList(@PathVariable("type") String type, @ModelAttribute ReservationSearch search) {
 
         return null;
     }
@@ -55,7 +55,7 @@ public class CounselingController {
 
     @Operation(summary = "상담 신청 취소", method="GET")
     @GetMapping("/reservation/cancel/{reservationNo}")
-    public void resevationCancel(@PathVariable("reservationNo") Long rNo) {
+    public void reservationCancel(@PathVariable("reservationNo") Long rNo) {
 
     }
 
