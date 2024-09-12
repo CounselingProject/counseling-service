@@ -16,6 +16,6 @@ public class ReservationApplyService {
     private final MemberUtil memberUtil;
 
     public void apply(RequestReservation form) {
-
+        
     }
 }
