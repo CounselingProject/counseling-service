@@ -26,15 +26,21 @@ public class CounselingInfoService {
         if (CounselingType.PERSONAL == CounselingType.valueOf("personal")) {
             personalRepository.findById(cNo).orElseThrow(CounselingNotFoundException::new);
         }
+
+        if (CounselingType.GROUP == CounselingType.valueOf("group")) {
+            groupRepository.findById(cNo).orElseThrow(CounselingNotFoundException::new);
+        }
+
+
         return item;
     }
+
     // 목록 조회는 그룹상담만 해당
-    public ListData<Counseling> getList(CounselingSearch search)
-    {
+    public ListData<Counseling> getList(CounselingSearch search) {
         int page = Math.max(search.getPage(), 1);
         int limit = search.getLimit(); // 한페이지당 보여줄 레코드 개수
         limit = limit < 1 ? 10 : limit;
-        int offset = (page -1) * limit; // 레코드 시작 위치 구하기
+        int offset = (page - 1) * limit; // 레코드 시작 위치 구하기
 
         if (CounselingType.GROUP == CounselingType.valueOf("group")) {
             groupRepository.findById()
