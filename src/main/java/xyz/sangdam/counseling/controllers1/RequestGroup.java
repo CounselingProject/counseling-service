@@ -1,27 +1,20 @@
-package xyz.sangdam.counseling.entities1;
+package xyz.sangdam.counseling.controllers1;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 
-@Builder
-@NoArgsConstructor @AllArgsConstructor
-@RestController
 @Data
-public class GroupPrm {
+public class RequestGroup {
 
     @Id
     @GeneratedValue
-    private Long groupNo; // 집단상담프로그램번호
+    private Long groupNo; // 집단상담 프로그램번호
 
     @Column(length = 45, nullable = false)
     private String gid; // 이미지용 그룹 아이디
@@ -49,11 +42,12 @@ public class GroupPrm {
 
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-    private LocalDate groupSdate; // 상담 시작일자
+    private LocalDate groupSdate; // 잡단상담 프로그램 시작일자
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-    private LocalDate groupEdate; // 상담 종료일자
+    private LocalDate groupEdate; // 집단상담 프로그램 종료일자
 
     private int groupLimit; // 인원수
+
 
 }
