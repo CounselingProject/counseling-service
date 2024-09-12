@@ -4,6 +4,9 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,12 +27,19 @@ import xyz.sangdam.counseling.repositories.PersonalCounselingRepository;
 import xyz.sangdam.global.ListData;
 import xyz.sangdam.global.Pagination;
 
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CounselingInfoService {
+    private static final Logger logger = LoggerFactory.getLogger(CounselingInfoService.class);
+
+
     private final PersonalCounselingRepository personalRepository;
     private final GroupCounselingRepository groupRepository;
     private final CounselingRepository counselingRepository; // 목록 조회시
@@ -109,7 +119,47 @@ public class CounselingInfoService {
         return new ListData<>(items, pagination);
     }
 
+    /**
+     * 추가 데이터 처리
+     * 1. 예약 가능 요일 : 월 ~ 금 (주중)
+     * 2. 예약 가능 시간 : 9시 ~ 18시
+     * @param item
+     */
     private void addInfo(Counseling item) {
+        List<LocalDateTime> availableDates = new ArrayList<>();
 
+        LocalDateTime startDateTime;
+        LocalDateTime endDateTime;
+
+        if (item instanceof PersonalCounseling) {
+            PersonalCounseling personal = (PersonalCounseling) item;
+            startDateTime = personal.getReservationSdate().atTime(LocalTime.of(9, 0));
+            endDateTime = personal.getReservationEdate().atTime(LocalTime.of(18, 0));
+            logger.info("PersonalCounseling - 시작일시: {}, 종료일시: {}", startDateTime, endDateTime);
+
+        } else if (item instanceof GroupCounseling) {
+            GroupCounseling group = (GroupCounseling) item;
+            startDateTime = group.getCounselingSdate().atTime(LocalTime.of(9, 0));
+            endDateTime = group.getCounselingEdate().atTime(LocalTime.of(18, 0));
+            logger.info("GroupCounseling - 시작일시: {}, 종료일시: {}", startDateTime, endDateTime);
+        } else {
+            throw new IllegalArgumentException("해당하는 상담 유형이 존재하지 않습니다.");
+        }
+
+        LocalDateTime currentDateTime = startDateTime;
+
+        while (currentDateTime.isBefore(endDateTime)) {
+            if (currentDateTime.toLocalDate().getDayOfWeek() != DayOfWeek.SATURDAY &&
+                    currentDateTime.toLocalDate().getDayOfWeek() != DayOfWeek.SUNDAY) {
+
+                LocalTime time = LocalTime.of(9, 0);
+                while (time.isBefore(LocalTime.of(18, 0))) {
+                    availableDates.add(currentDateTime.with(time));
+                    time = time.plusHours(1);
+                }
+            }
+            currentDateTime = currentDateTime.plusDays(1).withHour(9).withMinute(0).withSecond(0).withNano(0);
+        }
+        logger.debug("예약 가능한 날짜 및 시간 목록: {}", availableDates);
     }
 }
