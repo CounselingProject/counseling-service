@@ -9,11 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import xyz.sangdam.counseling.entities.Counseling;
 import xyz.sangdam.counseling.services.CounselingDeleteService;
-import xyz.sangdam.counseling.services.CounselingInfoService;
 import xyz.sangdam.counseling.services.CounselingSaveService;
-import xyz.sangdam.global.ListData;
 import xyz.sangdam.global.Utils;
 import xyz.sangdam.global.exceptions.BadRequestException;
 import xyz.sangdam.global.rests.JSONData;
@@ -26,7 +23,6 @@ public class CounselingAdminController {
 
     private final HttpServletRequest request;
     private final CounselingSaveService counselingSaveService;
-    private final CounselingInfoService counselingInfoService;
     private final CounselingDeleteService counselingDeleteService;
     private final Utils utils;
 
@@ -43,22 +39,6 @@ public class CounselingAdminController {
         HttpStatus status = request.getMethod().toUpperCase().equals("POST") ? HttpStatus.CREATED : HttpStatus.OK; // equals = 방식 통일 | POST 방식
 
         return ResponseEntity.status(status).build();
-    }
-
-    @Operation(summary = "집단 상담 프로그램 조회", method = "GET")
-    @GetMapping("/counseling/info/{cNo}")
-    public JSONData info(@PathVariable("cNo") Long cNo) { // 1개 조회
-        Counseling counseling = counselingInfoService.get(cNo);
-
-        return new JSONData(counseling); // JSONData 값으로 보냄
-    }
-
-    @Operation(summary = "집단 상담 프로그램 목록 조회", method = "GET")
-    @GetMapping("/counseling")
-    public JSONData list(CounselingSearch search) {
-        ListData<Counseling> data = counselingInfoService.getList(search);
-
-        return new JSONData(data); // JSONData 값으로 보냄
     }
 
     @Operation(summary = "집단 상담 프로그램 삭제", method = "DELETE")
