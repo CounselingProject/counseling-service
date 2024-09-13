@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 public class Reservation extends BaseEntity {
     @Id
     @GeneratedValue
-    private Long rNo; // 예약 접수 번호
+    private Long rNo; // 예약 접수 번호 -> 취소만 함 | cNo 는 집단 상담일 때 필요함
 
     @Column(length=20)
     @Enumerated(EnumType.STRING)
