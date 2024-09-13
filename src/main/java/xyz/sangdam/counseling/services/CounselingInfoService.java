@@ -21,7 +21,6 @@ import xyz.sangdam.global.ListData;
 import xyz.sangdam.global.Pagination;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 import static org.springframework.data.domain.Sort.Order.desc;
@@ -35,7 +34,11 @@ public class CounselingInfoService {
     private final HttpServletRequest request;
 
     public Counseling get(Long cNo) { // 한 개 조회
-        Counseling item = repository.findById(cNo).orElseThrow(CounselingNotFoundException::new);
+        BooleanBuilder builder = new BooleanBuilder();
+        QCounseling counseling = QCounseling.counseling;
+        builder.and(counseling.cNo.eq(cNo)).and(counseling.deletedAt.isNull()); // null 이어야 삭제 가능
+
+        Counseling item = repository.findOne(builder).orElseThrow(CounselingNotFoundException::new);
 
         addInfo(item); // 추가 처리
 
@@ -52,6 +55,8 @@ public class CounselingInfoService {
         QCounseling counseling = QCounseling.counseling;
         String sopt = search.getSopt();
         String skey = search.getSkey();
+
+        andBuilder.and(counseling.deletedAt.isNull()); // 소프트 삭제 | null 이어야 삭제 가능
 
         sopt = StringUtils.hasText(sopt) ? sopt.toUpperCase() : "ALL"; // 기본값 = ALL | toUpperCase = 대/소문자 동일하게 처리
         if (StringUtils.hasText(skey)) {
@@ -70,7 +75,7 @@ public class CounselingInfoService {
             }
         }
 
-        // 신청일 검색 : 종료 일자의 마지막 시간 23:59:59 로 맞춰야 함 | LocalDate = 날짜 -> LocalDateTime = 날짜 & 시간
+        /* 신청일 검색 S : 종료 일자의 마지막 시간 23:59:59 로 맞춰야 함 | LocalDate = 날짜 -> LocalDateTime = 날짜 & 시간 */
         LocalDate sDate = search.getSDate(); // 검색 시작일
         LocalDate eDate = search.getEDate(); // 검색 종료일
 
@@ -81,6 +86,7 @@ public class CounselingInfoService {
         if (eDate != null) {
             andBuilder.and(counseling.counselingDate.loe(eDate.atTime(23, 59, 59))); // loe = 작거나 같다 | lt = 작다 || atTime = LocalTime 즉, 시간을 추가한 것 / atTime(23, 59, 59) == atTime(LocalTime.MAX) : Max = 23:59:59
         }
+        /* 신청일 검색 E */
         /* 검색 처리 E */
 
         /* 페이징 처리 */
