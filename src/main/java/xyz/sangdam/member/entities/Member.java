@@ -32,7 +32,7 @@ public class Member extends BaseEntity {
     private String empNo; // 사번
     private String subject; // 담당 과목
 
-    /* 학생 관련 추가 정보*/
+    /* 학생 관련 추가 정보 */
     private String grade; // 학년
     private String stdntNo; // 학번
 
