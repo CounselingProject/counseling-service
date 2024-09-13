@@ -27,9 +27,13 @@ public class Reservation extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Status status; // 진행상태
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @Column(length=20)
+    private CounselingType counselingType; // 개인/집단상담 구분
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="cNo")
-    private Counseling counseling;
+    private Counseling counseling; // 집단상담
 
     @Column(length = 40, nullable = false)
     private String userName; // 로그인 회원명
@@ -39,14 +43,10 @@ public class Reservation extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(length=20)
-    private CounselingType type; // 개인/집단상담 구분
-
-    @Enumerated(EnumType.STRING)
-    @Column(length=20)
     private PersonalCategory category; // 개인상담 종류
 
     @Column(length=60, nullable = false)
-    private String counselingName; // 상담명
+    private String counselingName; // 개인상담명(학생이름(학번)님 개인상담) + 집단 상담 프로그램명
 
     @Column(length=20, nullable = false)
     private String counselorName; // 상담사명
@@ -56,9 +56,6 @@ public class Reservation extends BaseEntity {
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime rDateTime; // 예약일시
-
-    @Column(length=60, nullable = false)
-    private String programNm; // 프로그램명
 
     @Lob
     private String reason; // 상담 사유

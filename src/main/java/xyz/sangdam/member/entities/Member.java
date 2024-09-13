@@ -35,6 +35,8 @@ public class Member extends BaseEntity {
     private String grade; // 학년
     private String stdntNo; // 학번
 
+    private Member professor; // 지도 교수
+
     @JsonIgnore
     public UserType getUserType() {
         return _userType == null ? null : UserType.valueOf(_userType);

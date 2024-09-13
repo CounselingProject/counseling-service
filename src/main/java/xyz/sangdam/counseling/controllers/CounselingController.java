@@ -2,10 +2,20 @@ package xyz.sangdam.counseling.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import xyz.sangdam.counseling.entities.Counseling;
+import xyz.sangdam.counseling.services.CounselingInfoService;
+import xyz.sangdam.global.ListData;
+import xyz.sangdam.global.Utils;
+import xyz.sangdam.global.exceptions.BadRequestException;
 import xyz.sangdam.global.rests.JSONData;
 
 @Tag(name="Counseling", description = "상담 API")
@@ -13,69 +23,35 @@ import xyz.sangdam.global.rests.JSONData;
 @RequiredArgsConstructor
 public class CounselingController {
 
-    @Operation(summary = "개인/집단 상담 프로그램 목록", description = "type - personal : 개인 상담 목록<br>type - group : 그룹 상담 목록", method="GET")
-    @GetMapping("/counseling/{type}")
-    public JSONData counselingList(@PathVariable("type") String type) {
+    private final CounselingInfoService counselingInfoService;
+    private final Utils utils;
 
-        return null;
+    // 집단상담프로그램 조회 시에는 JsonData값으로 받아야 하니까 JSONdata
+    @Operation(summary = "집단상담 프로그램 조회", method = "GET")
+    @GetMapping("/counseling/info/{cNo}")
+    public JSONData info(@PathVariable("cNo") Long cNo) {
+        Counseling counseling = counselingInfoService.get(cNo);
+
+        return new JSONData(counseling);
     }
 
-    @Operation(summary = "개인/집단 상담 프로그램 보기", method="GET")
-    @GetMapping("/counseling/info/{counselingNo}")
-    public JSONData counselingInfo(@PathVariable("counselingNo") Long cNo) {
+    @Operation(summary = "집단 상담 프로그램 목록 조회 ", method = "GET")
+    @GetMapping("/counseling")
+    public JSONData list(CounselingSearch search) {
+        ListData<Counseling> data = counselingInfoService.getList(search);
 
-        return null;
+        return new JSONData(data);
     }
 
-    @Operation(summary = "개인/집단 상담 신청하기", description = "상담 프로그램 번호(counselingNo)에 따라서 개인 또는 집단 상담을 분리 처리")
-    @PostMapping("/counseling/apply")
-    public ResponseEntity<Void> apply() {
-        /**
-         * - 상담 프로그램 번호 : 개인 상담 -> ReservationRepository로 DB 처리
-         * - 상담 프로그램 번호 : 집단 상담 -> GroupReservationRepository로 DB 처리
-         */
+    public ResponseEntity<Void> apply (@Valid @RequestBody RequestReservation form , Errors errors) {
+        // cNo 들어오면 집단 상담 날짜만 들어왔다 개인상담으로 구분
+
+        if (errors.hasErrors()) {
+            throw new BadRequestException(utils.getErrorMessages(errors));
+
+        }
+        // 서비스 추가 예약 남은 서비스 말하시는 듯
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-
-    @Operation(summary = "개인/집단 신청 목록", description = "type - PERSONAL : 개인 상담 목록<br>GROUP : 집단 상담 목록")
-    @GetMapping("/reservation/{type}")
-    public JSONData resevationList(@PathVariable("type") String type, @ModelAttribute ReservationSearch search) {
-
-        return null;
-    }
-
-    @Operation(summary = "상담 신청 상세 정보", method="GET")
-    @GetMapping("/reservation/info/{reservationNo}")
-    public JSONData reservationInfo(@PathVariable("reservationNo") Long rNo) {
-
-        return null;
-    }
-
-    @Operation(summary = "상담 신청 취소", method="GET")
-    @GetMapping("/reservation/cancel/{reservationNo}")
-    public void resevationCancel(@PathVariable("reservationNo") Long rNo) {
-
-    }
-
-    @Operation(summary="상담일정/상담이력", description = "상담사/지도교수로 배정된 상담 신청 목록", method="GET")
-    @GetMapping("/cs/reservation")
-    public JSONData csReservationList(@ModelAttribute ReservationSearch search)  {
-
-        return null;
-    }
-
-    @Operation(summary = "상담신청 상세 보기", method="GET")
-    @GetMapping("/cs/reservation/{reservationNo}")
-    public JSONData csReservationInfo(@PathVariable("reservationNo") Long rNo) {
-
-        return null;
-    }
-
-    @Operation(summary = "상담 일정, 상담 상태 변경, 일지 작성", method = "PATCH")
-    @PatchMapping("/cs/reservation/{reservationNo}")
-    public void csReservationUpdate(@PathVariable("reservationNo") Long rNo) {
-
     }
 }

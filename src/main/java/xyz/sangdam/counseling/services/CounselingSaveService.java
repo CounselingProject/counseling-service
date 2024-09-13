@@ -1,38 +1,49 @@
 package xyz.sangdam.counseling.services;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import xyz.sangdam.counseling.controllers.RequestCounseling;
 import xyz.sangdam.counseling.entities.Counseling;
+import xyz.sangdam.counseling.exceptions.CounselingNotFoundException;
 import xyz.sangdam.counseling.repositories.CounselingRepository;
+import xyz.sangdam.file.services.FileUploadDoneService;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class CounselingSaveService {
 
-    private final CounselingRepository counselingRepository;
+    private final CounselingRepository repository;
+    private final ModelMapper modelMapper;
+    private final FileUploadDoneService uploadDoneService;
 
-    public Counseling save(RequestCounseling form) {
+    public void save(RequestCounseling form) {
 
         Long cNo = form.getCNo();
-        Counseling item = Counseling.builder()
-                .cNo(cNo)
-                .counselingDes(form.getCounselingDes())
-                .counselingDate(form.getCounselingDate())
-                .counselingLimit(form.getCounselingLimit())
-                .counselorName(form.getCounselorName())
-                .counselorEmail(form.getCounselorEmail())
-                .gid(form.getGid())
-                .reservationSdate(form.getReservationSdate())
-                .reservationEdate(form.getReservationEdate())
-                .programNm(form.getProgramNm())
-                .build();
+        String mode = Objects.requireNonNullElse(form.getMode(), "write");
+        Counseling counseling = null;
+        if (mode.equals("update") && cNo != null) {
+            counseling = repository.findById(cNo).orElseThrow(CounselingNotFoundException::new);
+        } else {
+            counseling = new Counseling();
+            counseling.setGid(form.getGid()); // 파일 그룹아이디는 만들 때 처음 한번만 생성
+        }
 
-        return save(item);
-    }
+        counseling.setCounselingDes(form.getCounselingDes());
+        counseling.setCounselingName(form.getCounselingName());
+        counseling.setCounselorName(form.getCounselorName());
+        counseling.setCounselorEmail(form.getCounselorEmail());
 
-    public Counseling save(Counseling item) {
-        counselingRepository.saveAndFlush(item);
-        return item;
+        counseling.setReservationSdate(form.getReservationSdate());
+        counseling.setReservationEdate(form.getReservationEdate());
+
+        counseling.setCounselingDate(form.getCounselingDate());
+        counseling.setCounselingLimit(form.getCounselingLimit());
+
+        repository.saveAndFlush(counseling);
+
+        uploadDoneService.process(form.getGid());
     }
 }
