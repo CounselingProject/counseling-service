@@ -1,6 +1,7 @@
 package xyz.sangdam.counseling.services;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.StringExpression;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import xyz.sangdam.counseling.controllers.CounselingSearch;
 import xyz.sangdam.counseling.entities.Counseling;
 import xyz.sangdam.counseling.entities.QCounseling;
@@ -48,6 +50,23 @@ public class CounselingInfoService {
         QCounseling counseling = QCounseling.counseling;
         String sopt = search.getSopt();
         String skey = search.getSkey();
+
+        sopt = StringUtils.hasText(sopt) ? sopt.toUpperCase() : "ALL"; // 기본값 = ALL | toUpperCase = 대/소문자 동일하게 처리
+        if (StringUtils.hasText(skey)) {
+            skey = skey.trim(); // 공백 제거
+            StringExpression expression = null;
+            if (sopt.equals("COUNSELING_NAME")) {
+                expression = counseling.counselingName;
+            } else if (sopt.equals("COUNSELOR_NAME")) {
+                expression = counseling.counselorName.concat(counseling.counselorEmail); // 상담사명 & 상담사 이메일
+            } else { // 통합 검색
+                expression = counseling.counselorName.concat(counseling.counselorEmail).concat(counseling.counselingName); // 상담사명 & 상담사 이메일 & 상담 프로그램명
+            }
+
+            if (expression != null) {
+                andBuilder.and(expression.contains(skey));
+            }
+        }
         /* 검색 처리 E */
 
         /* 페이징 처리 */
