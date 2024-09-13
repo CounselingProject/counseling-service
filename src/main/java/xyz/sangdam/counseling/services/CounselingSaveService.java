@@ -1,48 +1,45 @@
 package xyz.sangdam.counseling.services;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import xyz.sangdam.counseling.constants.CounselingType;
 import xyz.sangdam.counseling.controllers.RequestCounseling;
 import xyz.sangdam.counseling.entities.Counseling;
-import xyz.sangdam.counseling.entities.GroupCounseling;
-import xyz.sangdam.counseling.entities.PersonalCounseling;
-import xyz.sangdam.counseling.repositories.GroupCounselingRepository;
-import xyz.sangdam.counseling.repositories.PersonalCounselingRepository;
+import xyz.sangdam.counseling.exceptions.CounselingNotFoundException;
+import xyz.sangdam.counseling.repositories.CounselingRepository;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class CounselingSaveService {
-    private final PersonalCounselingRepository personalRepository;
-    private final GroupCounselingRepository groupRepository;
 
-    public void save(RequestCounseling form) {
+    private final CounselingRepository repository;
+    private final ModelMapper modelMapper;
 
-        Long cNo = form.getCounselingNo();
-        String type = form.getCounselingType();
-        type = StringUtils.hasText(type) ? type : "PERSONAL";
-        CounselingType counselingType = CounselingType.valueOf(type);
+    public void save(RequestCounseling form) {  // 상담 등록 + 수정
+        Long cNo = form.getCNo();
+        String mode = Objects.requireNonNullElse(form.getMode(), "write"); // write 가 기본값
 
         Counseling counseling = null;
-        if (counselingType == CounselingType.GROUP) {
-            counseling = cNo == null ? new GroupCounseling() : groupRepository.findById(cNo).orElseGet(GroupCounseling::new);
+        if (mode.equals("update") && cNo != null) {
+            counseling = repository.findById(cNo).orElseThrow(CounselingNotFoundException::new);
         } else {
-            counseling = cNo == null ? new PersonalCounseling() : personalRepository.findById(cNo).orElseGet(PersonalCounseling::new);
+            counseling = new Counseling(); // counseling = Counseling.builder().gid(form.getGid()).build(); 와 동일
+            counseling.setGid(form.getGid()); // 처음 등록할 때만 그룹 아이디인 gid 등록함
         }
 
-        /* 공통 항목 처리 S */
+        counseling.setCounselingDes(form.getCounselingDes()); // 상담 설명
+        counseling.setCounselingName(form.getCounselingName()); // 상담 프로그램명
+        counseling.setCounselorName(form.getCounselorName()); // 상담사명
+        counseling.setCounselorEmail(form.getCounselorEmail()); // 상담사 이메일
 
-        /* 공통 항목 처리 E */
+        counseling.setReservationSdate(form.getReservationSdate()); // 상담 신청 시작 일자
+        counseling.setReservationEdate(form.getReservationEdate()); // 상담 신청 종료 일자
 
-        if (counseling instanceof GroupCounseling groupCounseling) {
-            // 집단 상담에 추가할 처리
+        counseling.setCounselingDate(form.getCounselingDate()); // 상담일
+        counseling.setCounselingLimit(form.getCounselingLimit()); // 상담 프로그램 정원
 
-            groupRepository.saveAndFlush(groupCounseling);
-        } else if (counseling instanceof PersonalCounseling personalCounseling) {
-            // 개별 상담에 추가할 처리
-
-            personalRepository.saveAndFlush(personalCounseling);
-        }
+        repository.saveAndFlush(counseling); // counseling 값을 repository 에 저장
     }
 }
