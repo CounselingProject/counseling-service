@@ -2,27 +2,33 @@ package xyz.sangdam.counseling.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import xyz.sangdam.counseling.constants.CounselingType;
+import lombok.NoArgsConstructor;
 import xyz.sangdam.global.entities.BaseMemberEntity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
+@Builder
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-public class Counseling extends BaseMemberEntity {
-    @Id @GeneratedValue
-    private Long counselingNo;
+@NoArgsConstructor
+@AllArgsConstructor
+public class Counseling extends BaseMemberEntity { // 집단상담
+    @Id
+    @GeneratedValue
+    private Long cNo; // 상담 번호
 
     @Column(length=45, nullable = false)
-    private String gid;
+    private String gid; // 이미지 등록에 필요
 
     @Column(length=60, nullable = false)
-    private String counselingName; // 상담명
+    private String counselingName; // 집단상담 프로그램명
 
     @Lob
-    private String counsellingDes; // 상담 설명
+    private String counselingDes; // 상담 설명
 
     @Column(length=20, nullable = false)
     private String counselorName; // 상담사명
@@ -30,13 +36,14 @@ public class Counseling extends BaseMemberEntity {
     @Column(length=65, nullable = false)
     private String counselorEmail; // 상담사 이메일
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-    private LocalDate reservationSdate; // 신청 시작일시
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate reservationSdate; // 신청기간 시작일자
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate reservationEdate; // 신청기간 종료일자
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-    private LocalDate reservationEdate; // 신청 종료일시
+    private LocalDateTime counselingDate; // 상담일시
 
-    @Enumerated(EnumType.STRING)
-    @Column(length=20, nullable = false)
-    private CounselingType counselingType; // 개인/집단상담 구분
+    private int counselingLimit; // 정원
 }

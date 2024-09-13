@@ -21,13 +21,15 @@ public class QCounseling extends EntityPathBase<Counseling> {
 
     public final xyz.sangdam.global.entities.QBaseMemberEntity _super = new xyz.sangdam.global.entities.QBaseMemberEntity(this);
 
+    public final NumberPath<Long> cNo = createNumber("cNo", Long.class);
+
+    public final DateTimePath<java.time.LocalDateTime> counselingDate = createDateTime("counselingDate", java.time.LocalDateTime.class);
+
+    public final StringPath counselingDes = createString("counselingDes");
+
+    public final NumberPath<Integer> counselingLimit = createNumber("counselingLimit", Integer.class);
+
     public final StringPath counselingName = createString("counselingName");
-
-    public final NumberPath<Long> counselingNo = createNumber("counselingNo", Long.class);
-
-    public final EnumPath<xyz.sangdam.counseling.constants.CounselingType> counselingType = createEnum("counselingType", xyz.sangdam.counseling.constants.CounselingType.class);
-
-    public final StringPath counsellingDes = createString("counsellingDes");
 
     public final StringPath counselorEmail = createString("counselorEmail");
 
