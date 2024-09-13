@@ -1,14 +1,11 @@
 package xyz.sangdam.member;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import xyz.sangdam.member.constants.UserType;
-import xyz.sangdam.member.entities.Employee;
 import xyz.sangdam.member.entities.Member;
-import xyz.sangdam.member.entities.Student;
 
 @Component
 @RequiredArgsConstructor
@@ -19,31 +16,28 @@ public class MemberUtil {
     }
 
     public boolean isStudent() {
-        return isLogin() && getMember() instanceof Student;
+        return isLogin() && getMember().getUserType() == UserType.STUDENT;
     }
 
     public boolean isAdmin() {
-        Member member = getMember();
-        return isLogin() && member instanceof Employee && member.getUserType() == UserType.ADMIN;
+        return isLogin() && getMember().getUserType() == UserType.ADMIN;
     }
 
     public boolean isProfessor() {
-        Member member = getMember();
-        return isLogin() && member instanceof Employee && member.getUserType() == UserType.PROFESSOR;
+        return isLogin() && getMember().getUserType() == UserType.PROFESSOR;
     }
 
     public boolean isCounselor() {
-        Member member = getMember();
-        return isLogin() && member instanceof Employee && member.getUserType() == UserType.COUNSELOR;
+        return isLogin() && getMember().getUserType() == UserType.COUNSELOR;
     }
 
-    public <T extends Member> T getMember() {
+    public Member getMember() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof MemberInfo memberInfo) {
 
-            return (T)memberInfo.getMember();
+            return memberInfo.getMember();
         }
 
         return null;
