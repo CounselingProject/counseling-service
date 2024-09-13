@@ -26,7 +26,7 @@ public class Counseling {
     private String gid; // 이미지 등록에 필요
 
     @Column(length=60, nullable = false)
-    private String counselingName; // 상담명
+    private String programNm; // 프로그램명
 
     @Lob
     private String counselingDes; // 상담 설명
@@ -48,6 +48,4 @@ public class Counseling {
 
     private int counselingLimit; // 정원
 
-    @Column(length=60, nullable = false)
-    private String programNm; // 프로그램명
 }
