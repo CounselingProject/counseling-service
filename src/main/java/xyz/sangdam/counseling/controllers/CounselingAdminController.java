@@ -51,11 +51,13 @@ public class CounselingAdminController {
     public void delete(@PathVariable("cNo") Long cNo) {
         counselingDeleteService.delete(cNo);
     }
-    @Operation(summary = "상담 예약 신청 목록")  // 여기서 상태를 바꿀것임 chagestatus로 바꿈
-@GetMapping("/reservation")
-    public JSONData reservationList() {
+    @Operation(summary="상담 예약 신청 목록")
+    @GetMapping("/reservation")
+    public JSONData reservationList(ReservationSearch search) {
+
         return null;
     }
+
     @Operation(summary = "상담 예약 상태 변경")
     @PatchMapping("/reservation")
     public void reservationStatusChange() {
