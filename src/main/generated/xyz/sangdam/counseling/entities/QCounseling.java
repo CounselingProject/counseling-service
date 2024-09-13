@@ -19,40 +19,31 @@ public class QCounseling extends EntityPathBase<Counseling> {
 
     public static final QCounseling counseling = new QCounseling("counseling");
 
-    public final xyz.sangdam.global.entities.QBaseMemberEntity _super = new xyz.sangdam.global.entities.QBaseMemberEntity(this);
+    public final EnumPath<xyz.sangdam.counseling.constants.PersonalCategory> category = createEnum("category", xyz.sangdam.counseling.constants.PersonalCategory.class);
+
+    public final NumberPath<Long> cNo = createNumber("cNo", Long.class);
+
+    public final DatePath<java.time.LocalDate> counselingDate = createDate("counselingDate", java.time.LocalDate.class);
+
+    public final StringPath counselingDes = createString("counselingDes");
+
+    public final NumberPath<Integer> counselingLimit = createNumber("counselingLimit", Integer.class);
 
     public final StringPath counselingName = createString("counselingName");
-
-    public final NumberPath<Long> counselingNo = createNumber("counselingNo", Long.class);
-
-    public final EnumPath<xyz.sangdam.counseling.constants.CounselingType> counselingType = createEnum("counselingType", xyz.sangdam.counseling.constants.CounselingType.class);
-
-    public final StringPath counsellingDes = createString("counsellingDes");
 
     public final StringPath counselorEmail = createString("counselorEmail");
 
     public final StringPath counselorName = createString("counselorName");
 
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
-
-    //inherited
-    public final StringPath createdBy = _super.createdBy;
-
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> deletedAt = _super.deletedAt;
-
     public final StringPath gid = createString("gid");
 
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
-
-    //inherited
-    public final StringPath modifiedBy = _super.modifiedBy;
+    public final StringPath programNm = createString("programNm");
 
     public final DatePath<java.time.LocalDate> reservationEdate = createDate("reservationEdate", java.time.LocalDate.class);
 
     public final DatePath<java.time.LocalDate> reservationSdate = createDate("reservationSdate", java.time.LocalDate.class);
+
+    public final EnumPath<xyz.sangdam.counseling.constants.CounselingType> type = createEnum("type", xyz.sangdam.counseling.constants.CounselingType.class);
 
     public QCounseling(String variable) {
         super(Counseling.class, forVariable(variable));
