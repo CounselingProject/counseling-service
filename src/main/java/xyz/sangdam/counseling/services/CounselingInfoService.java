@@ -20,6 +20,8 @@ import xyz.sangdam.file.services.FileInfoService;
 import xyz.sangdam.global.ListData;
 import xyz.sangdam.global.Pagination;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.springframework.data.domain.Sort.Order.desc;
@@ -66,6 +68,18 @@ public class CounselingInfoService {
             if (expression != null) {
                 andBuilder.and(expression.contains(skey));
             }
+        }
+
+        // 신청일 검색 : 종료 일자의 마지막 시간 23:59:59 로 맞춰야 함 | LocalDate = 날짜 -> LocalDateTime = 날짜 & 시간
+        LocalDate sDate = search.getSDate(); // 검색 시작일
+        LocalDate eDate = search.getEDate(); // 검색 종료일
+
+        if (sDate != null) {
+            andBuilder.and(counseling.counselingDate.goe(sDate.atTime(0, 0, 0))); // goe = 크거나 같다 | gt = 크다 || atStartOfDay = 처음 시작 시간 = 0시 | atTime(0, 0, 0) == atStartOfDay() == LocalTime.MIN 과 동일
+        }
+
+        if (eDate != null) {
+            andBuilder.and(counseling.counselingDate.loe(eDate.atTime(23, 59, 59))); // loe = 작거나 같다 | lt = 작다 || atTime = LocalTime 즉, 시간을 추가한 것 / atTime(23, 59, 59) == atTime(LocalTime.MAX) : Max = 23:59:59
         }
         /* 검색 처리 E */
 
