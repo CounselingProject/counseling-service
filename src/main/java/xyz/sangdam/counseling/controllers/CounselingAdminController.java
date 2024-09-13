@@ -3,10 +3,17 @@ package xyz.sangdam.counseling.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import xyz.sangdam.counseling.services.CounselingDeleteService;
+import xyz.sangdam.counseling.services.CounselingInfoService;
+import xyz.sangdam.counseling.services.CounselingSaveService;
+import xyz.sangdam.global.Utils;
+import xyz.sangdam.global.exceptions.BadRequestException;
 import xyz.sangdam.global.rests.JSONData;
 
 @Tag(name="CounselingAdmin", description = "상담 관리자 API")
@@ -15,78 +22,42 @@ import xyz.sangdam.global.rests.JSONData;
 @RequiredArgsConstructor
 public class CounselingAdminController {
     private final HttpServletRequest request;
+    private final CounselingSaveService counselingSaveService;
+    private final CounselingInfoService counselingInfoService;
+    private final CounselingDeleteService counselingDeleteService;
+    private final Utils utils;
 
-    /**
-     * - 개인/집담 상담 프로그램 등록,수정,삭제
-     * 		- 담임교수 상담, 취업 상담, 심리 상담
-     * 			- CounselingType
-     *
-     * 		  등록 - POST /admin/counseling
-     * 		  수정 - PATCH /admin/counseling/{counselingNo}
-     * 		  삭제 - DELETE /admin/counseling/{counselingNo}
-     *
-     * 	- 개인/집단 상담 프로그램 목록(신청 기간과 상관 없이 노출)
-     * 		목록 : GET /admin/counseling
-     *
-     * 	- 개인/집단 상담 신청 목록
-     * 		GET /admin/reservation
-     *
-     * 	- 개인/집단 상담 신청 상세
-     * 		GET /admin/reservation/{reservationNo}
-     *
-     * - 상담 신청 이력
-     * 	- 개인/집단 상담 신청 목록
-     * 		GET /admin/reservation
-     * 					- Counseling -> CounselingType : 개인상담/집단 상담
-     * 	- 개인/집단 상담 신청 상세
-     * 		GET /admin/reservation/{reservationNo}
-     * 				- Counseling -> CounselingType : 개인상담/집단 상담
-     */
-    @Operation(summary = "개인/집단 상담 프로그램 등록", description = "counselingType - PERSONAL : 개인 상담 프로그램, GROUP : 집단 상담 프로그램")
-    @PostMapping("/counseling")
-    public ResponseEntity<Void> registerCounseling() {
-        return save();
-    }
+    @Operation(summary = "집단상담 등록/수정", description = "POST 방식 요청 - 등록, PATCH 방식 요청 - 수정")
+    @RequestMapping(path="/counseling", method = {RequestMethod.POST, RequestMethod.PATCH}) // 처음 등록할 때는 POST, 수정할 때는 PATCH
+    public ResponseEntity<Void> save(@Valid @RequestBody RequestCounseling form, Errors errors) {
 
-    @Operation(summary = "개인/집담 상담 프로그램 수정", method = "PATCH")
-    @PatchMapping("/counseling/{counselingNo}")
-    public ResponseEntity<Void> updateCounseling(@PathVariable("counselingNo") Long cNo) {
+        if (errors.hasErrors()) {
+            throw new BadRequestException(utils.getErrorMessages(errors));
+        }
 
-        return save();
-    }
-
-    public ResponseEntity<Void> save() {
-
+        counselingSaveService.save(form);
         HttpStatus status = request.getMethod().toUpperCase().equals("POST") ? HttpStatus.CREATED : HttpStatus.OK;
 
         return ResponseEntity.status(status).build();
     }
 
-    @Operation(summary = "개인/집담 상담 프로그램 삭제", method = "DELETE")
-    @DeleteMapping("/counseling/{counselingNo}")
-    public void deleteCounseling(@PathVariable("counselingNo") Long cNo) {
-
-        // 상담 프로그램 정보 삭제시 파일 정보도 함께 삭제
+    @Operation(summary = "집단상담 삭제", method="DELETE")
+    @DeleteMapping("/counseling/{cNo}")
+    public void delete(@PathVariable("cNo") Long cNo) {
+        counselingDeleteService.delete(cNo);
     }
 
-    @Operation(summary = "개인/집단 상담 프로그램 목록", method="GET")
-    @GetMapping("/counseling")
-    public JSONData counselingList(@ModelAttribute CounselingSearch search) {
-
-        return null;
-    }
-
-    @Operation(summary = "개인/집단 상담 신청 목록", method="GET")
+    @Operation(summary = "상담 예약 신청 목록")
     @GetMapping("/reservation")
-    public JSONData reservationList(@ModelAttribute ReservationSearch search) {
+    public JSONData reservationList(ReservationSearch search) {
 
         return null;
+
     }
 
-    @Operation(summary = "개인/집단 상담 신청 상세")
-    @GetMapping("/reservation/{reservationNo}")
-    public JSONData reservationInfo(@PathVariable("reservationNo") Long rNo) {
+    @Operation(summary = "상담 예약 상태 변경")
+    @PatchMapping("/reservation")
+    public void reservationStatusChange() {
 
-        return null;
     }
 }
