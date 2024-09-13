@@ -74,4 +74,10 @@ public class CounselingController {
 
         return null;
     }
+
+    @Operation(summary = "예약 상태 변경", method = "PATCH")
+    @PatchMapping("/apply/{rNo}")
+    public void applyChange(@PathVariable("rNo") Long rNo) {
+
+    }
 }
