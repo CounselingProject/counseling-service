@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 public class RequestCounseling {
 
-    private Long cNo; // 상담 번호 - 수정 시 필요
+    private Long cNo; // 집단상담 번호
 
     private String mode; // write(등록), update(수정)
 

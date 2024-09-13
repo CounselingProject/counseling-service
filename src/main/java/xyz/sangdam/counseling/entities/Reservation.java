@@ -49,10 +49,10 @@ public class Reservation extends BaseEntity { // 개인상담 + 예약
     private String counselorEmail; // 상담사 이메일
 
     @Column(length = 40, nullable = false)
-    private String userName; // 로그인 회원명
+    private String userName; // 로그인한 학생명
 
     @Column(length = 80, nullable = false)
-    private String email; // 로그인 회원 이메일
+    private String email; // 로그인한 학생 이메일
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime rDateTime; // 예약일시

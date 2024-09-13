@@ -8,7 +8,7 @@ import java.time.LocalTime;
 
 @Data
 public class RequestReservation {
-    private Long cNo; // 집단상담 프로그램 번호
+    private Long cNo; // 집단상담 번호 - cNo가 있으면 집단상담
 
     /* 개인상담 */
     private String category; // 개인상담 분류

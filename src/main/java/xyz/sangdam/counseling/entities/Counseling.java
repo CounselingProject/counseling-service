@@ -6,10 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import xyz.sangdam.file.entities.FileInfo;
 import xyz.sangdam.global.entities.BaseMemberEntity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -19,7 +21,7 @@ import java.time.LocalDateTime;
 public class Counseling extends BaseMemberEntity { // 집단상담
     @Id
     @GeneratedValue
-    private Long cNo; // 상담 번호
+    private Long cNo; // 집단상담 번호
 
     @Column(length=45, nullable = false)
     private String gid; // 이미지 등록에 필요
@@ -46,4 +48,7 @@ public class Counseling extends BaseMemberEntity { // 집단상담
     private LocalDateTime counselingDate; // 상담일시
 
     private int counselingLimit; // 정원
+
+    @Transient
+    private List<FileInfo> editorImages;
 }
