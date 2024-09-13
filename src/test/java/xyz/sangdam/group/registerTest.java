@@ -4,9 +4,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import xyz.sangdam.counseling.controllers.RequestCounseling;
 import xyz.sangdam.counseling.entities.Counseling;
 import xyz.sangdam.counseling.repositories.CounselingRepository;
 import xyz.sangdam.counseling.services.CounselingSaveService;
+
+import java.time.LocalDate;
 
 @SpringBootTest
 public class registerTest {
@@ -31,13 +34,13 @@ public class registerTest {
     @Test
     void saveTest() {
 
-        Counseling form = new Counseling();
+        RequestCounseling form = new RequestCounseling();
         form.setCNo(1L);
         form.setCounselingName("내 자아를 찾기 위한 프로그램");
-        //form.setReservationSdate();
+        form.setReservationSdate(LocalDate.of(2024, 9, 12));
         form.setCounselingDes("자아가 분열됐을 때 다시 찾기 위해서 심리 집단 상담 프로그램");
 
-
+        saveService.save(form);
 
         System.out.println(form);
     }
