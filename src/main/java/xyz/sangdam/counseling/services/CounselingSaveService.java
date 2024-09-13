@@ -7,6 +7,7 @@ import xyz.sangdam.counseling.controllers.RequestCounseling;
 import xyz.sangdam.counseling.entities.Counseling;
 import xyz.sangdam.counseling.exceptions.CounselingNotFoundException;
 import xyz.sangdam.counseling.repositories.CounselingRepository;
+import xyz.sangdam.file.services.FileUploadDoneService;
 
 import java.util.Objects;
 
@@ -16,6 +17,7 @@ public class CounselingSaveService {
 
     private final CounselingRepository repository;
     private final ModelMapper modelMapper;
+    private final FileUploadDoneService uploadDoneService;
 
     public void save(RequestCounseling form) {  // 상담 등록 + 수정
         Long cNo = form.getCNo();
@@ -41,5 +43,7 @@ public class CounselingSaveService {
         counseling.setCounselingLimit(form.getCounselingLimit()); // 상담 프로그램 정원
 
         repository.saveAndFlush(counseling); // counseling 값을 repository 에 저장
+
+        uploadDoneService.process(form.getGid()); // 파일 업로드 완료 처리
     }
 }
