@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import xyz.sangdam.counseling.constants.CounselingType;
-import xyz.sangdam.counseling.constants.PersonalCategory;
 
 import java.time.LocalDate;
 
@@ -17,20 +15,15 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Counseling {
+
+    // 집단상담 프로그램 등록
+
     @Id
     @GeneratedValue
     private Long cNo; // 상담 번호
 
     @Column(length=45, nullable = false)
     private String gid; // 이미지 등록에 필요
-
-    @Enumerated(EnumType.STRING)
-    @Column(length=20)
-    private CounselingType type; // 개인/집단상담 구분
-
-    @Enumerated(EnumType.STRING)
-    @Column(length=20)
-    private PersonalCategory category; // 개인상담 종류
 
     @Column(length=60, nullable = false)
     private String counselingName; // 상담명

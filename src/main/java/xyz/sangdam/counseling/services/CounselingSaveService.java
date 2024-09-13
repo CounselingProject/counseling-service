@@ -15,11 +15,8 @@ public class CounselingSaveService {
     public Counseling save(RequestCounseling form) {
 
         Long cNo = form.getCNo();
-
         Counseling item = Counseling.builder()
                 .cNo(cNo)
-                .type(form.getType())
-                .counselingName(form.getCounselingName())
                 .counselingDes(form.getCounselingDes())
                 .counselingDate(form.getCounselingDate())
                 .counselingLimit(form.getCounselingLimit())
