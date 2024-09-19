@@ -1,5 +1,6 @@
 package xyz.sangdam.member;
 
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +21,8 @@ public class MemberUtil {
     }
 
     public boolean isAdmin() {
-        return isLogin() && getMember().getUserType() == UserType.ADMIN;
+        Member member = getMember();
+        return isLogin() && member.getUserType() == UserType.ADMIN;
     }
 
     public boolean isProfessor() {

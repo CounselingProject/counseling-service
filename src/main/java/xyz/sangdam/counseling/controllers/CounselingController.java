@@ -30,12 +30,12 @@ public class CounselingController {
     private final MemberUtil memberUtil;
     private final Utils utils;
 
-    @Operation(summary = "집단 상담 프로그램 조회", method = "GET")
+    @Operation(summary = "집단 상담 프로그램 조회", method="GET")
     @GetMapping("/counseling/info/{cNo}")
-    public JSONData info(@PathVariable("cNo") Long cNo) { // 1개 조회
+    public JSONData info(@PathVariable("cNo") Long cNo) {
         Counseling counseling = counselingInfoService.get(cNo);
 
-        return new JSONData(counseling); // JSONData 값으로 보냄
+        return new JSONData(counseling);
     }
 
     @Operation(summary = "집단 상담 프로그램 목록 조회", method = "GET")
@@ -43,12 +43,12 @@ public class CounselingController {
     public JSONData list(CounselingSearch search) {
         ListData<Counseling> data = counselingInfoService.getList(search);
 
-        return new JSONData(data); // JSONData 값으로 보냄
+        return new JSONData(data);
     }
 
-    @Operation(summary = "상담 신청", method = "POST")
+    @Operation(summary = "예약 신청 접수", method = "POST")
     @PostMapping("/apply")
-    public ResponseEntity<Void> apply(@Valid @RequestBody RequestReservation form, Errors errors) { // cNo 없으면 집단 그외(날짜)는 개별 상담
+    public ResponseEntity<Void> apply(@Valid @RequestBody RequestReservation form, Errors errors) {
 
         if (errors.hasErrors()) {
             throw new BadRequestException(utils.getErrorMessages(errors));
@@ -64,21 +64,21 @@ public class CounselingController {
     @GetMapping("/apply")
     public JSONData applyList(ReservationSearch search) {
         Member member = memberUtil.getMember();
-        search.setEmail(List.of(member.getEmail())); // 본인 것만 나옴 -> 소비자 페이지 이므로
+        search.setEmail(List.of(member.getEmail()));
 
         // 서비스 추가
 
-        return null; // ListData 형태의 JSONData 값
+        return null;
     }
 
-    @Operation(summary = "예약 신청 상세 정보", method = "GET")
+    @Operation(summary="예약 신청 상세 정보", method = "GET")
     @GetMapping("/apply/{rNo}")
     public JSONData applyInfo(@PathVariable("rNo") Long rNo) {
 
         return null;
     }
 
-    @Operation(summary = "예약 상태 변경", method = "PATCH")
+    @Operation(summary = "예약 상태 변경", method="PATCH")
     @PatchMapping("/apply/{rNo}")
     public void applyChange(@PathVariable("rNo") Long rNo) {
 

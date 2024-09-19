@@ -21,6 +21,7 @@ import xyz.sangdam.global.ListData;
 import xyz.sangdam.global.Pagination;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.springframework.data.domain.Sort.Order.desc;
@@ -28,46 +29,52 @@ import static org.springframework.data.domain.Sort.Order.desc;
 @Service
 @RequiredArgsConstructor
 public class CounselingInfoService {
-
     private final CounselingRepository repository;
     private final FileInfoService fileInfoService;
     private final HttpServletRequest request;
 
-    public Counseling get(Long cNo) { // 한 개 조회
+    public Counseling get(Long cNo) {
         BooleanBuilder builder = new BooleanBuilder();
         QCounseling counseling = QCounseling.counseling;
-        builder.and(counseling.cNo.eq(cNo)).and(counseling.deletedAt.isNull()); // null 이어야 삭제 가능
+        builder.and(counseling.cNo.eq(cNo))
+                .and(counseling.deletedAt.isNull()); // deletedAt이 null인 것만 조회(소프트 삭제)
 
         Counseling item = repository.findOne(builder).orElseThrow(CounselingNotFoundException::new);
 
-        addInfo(item); // 추가 처리
+        // 추가 처리
+
+        addInfo(item);
 
         return item;
     }
 
-    public ListData<Counseling> getList(CounselingSearch search) { // 목록 조회
+    public ListData<Counseling> getList(CounselingSearch search) {
         int page = Math.max(search.getPage(), 1);
         int limit = search.getLimit();
-        limit = limit < 1 ? 20 : limit; // 기본값 = 20 (1 페이지당 20개)
+        limit = limit < 1 ? 20 : limit;
 
         /* 검색 처리 S */
         BooleanBuilder andBuilder = new BooleanBuilder();
         QCounseling counseling = QCounseling.counseling;
+
+        // 검색 옵션 및 키워드 처리
         String sopt = search.getSopt();
         String skey = search.getSkey();
 
-        andBuilder.and(counseling.deletedAt.isNull()); // 소프트 삭제 | null 이어야 삭제 가능
+        andBuilder.and(counseling.deletedAt.isNull()); // deletedAt이 null인 것만 조회(소프트 삭제)
 
-        sopt = StringUtils.hasText(sopt) ? sopt.toUpperCase() : "ALL"; // 기본값 = ALL | toUpperCase = 대/소문자 동일하게 처리
+        sopt = StringUtils.hasText(sopt) ? sopt.toUpperCase() : "ALL";
         if (StringUtils.hasText(skey)) {
-            skey = skey.trim(); // 공백 제거
+            skey = skey.trim();
             StringExpression expression = null;
             if (sopt.equals("COUNSELING_NAME")) {
                 expression = counseling.counselingName;
-            } else if (sopt.equals("COUNSELOR_NAME")) {
-                expression = counseling.counselorName.concat(counseling.counselorEmail); // 상담사명 & 상담사 이메일
+            } else if (sopt.equals("COUNSELOR")) {
+                expression = counseling.counselingName.concat(counseling.counselorEmail);
             } else { // 통합 검색
-                expression = counseling.counselorName.concat(counseling.counselorEmail).concat(counseling.counselingName); // 상담사명 & 상담사 이메일 & 상담 프로그램명
+                expression = counseling.counselingName
+                        .concat(counseling.counselorEmail)
+                        .concat(counseling.counselorName);
             }
 
             if (expression != null) {
@@ -75,22 +82,20 @@ public class CounselingInfoService {
             }
         }
 
-        /* 신청일 검색 S : 종료 일자의 마지막 시간 23:59:59 로 맞춰야 함 | LocalDate = 날짜 -> LocalDateTime = 날짜 & 시간 */
-        LocalDate sDate = search.getSDate(); // 검색 시작일
-        LocalDate eDate = search.getEDate(); // 검색 종료일
-
+        // 상담일 검색
+        LocalDate sDate = search.getSDate();
+        LocalDate eDate = search.getEDate();
         if (sDate != null) {
-            andBuilder.and(counseling.counselingDate.goe(sDate.atTime(0, 0, 0))); // goe = 크거나 같다 | gt = 크다 || atStartOfDay = 처음 시작 시간 = 0시 | atTime(0, 0, 0) == atStartOfDay() == LocalTime.MIN 과 동일
+            andBuilder.and(counseling.counselingDate.goe(sDate.atStartOfDay())); // atStartOfDay(하루의 시작 시간)
         }
 
         if (eDate != null) {
-            andBuilder.and(counseling.counselingDate.loe(eDate.atTime(23, 59, 59))); // loe = 작거나 같다 | lt = 작다 || atTime = LocalTime 즉, 시간을 추가한 것 / atTime(23, 59, 59) == atTime(LocalTime.MAX) : Max = 23:59:59
+            andBuilder.and(counseling.counselingDate.loe(eDate.atTime(LocalTime.MAX))); // LocalDate에 시간 추가 - atTime, LocalTime.MAX(하루의 마지막 시간)
+
         }
-        /* 신청일 검색 E */
         /* 검색 처리 E */
 
-        /* 페이징 처리 */
-        Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(desc("createdAt"))); // 스프링의 페이지는 0부터 시작하므로 - 1 해야 1페이지 부터 시작함
+        Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(desc("createdAt"))); // page -1 (pageable 첫번째 페이지 0부터 시작)
         Page<Counseling> data = repository.findAll(andBuilder, pageable);
 
         long total = repository.count(andBuilder);
@@ -104,8 +109,8 @@ public class CounselingInfoService {
         return new ListData<>(items, pagination);
     }
 
-    private void addInfo(Counseling item) { // 추가 정보
-        try { // 이미지 추가 기능
+    private void addInfo(Counseling item) {
+        try {
             List<FileInfo> editorImages = fileInfoService.getList(item.getGid(), "editor");
             item.setEditorImages(editorImages);
         } catch (Exception e) {

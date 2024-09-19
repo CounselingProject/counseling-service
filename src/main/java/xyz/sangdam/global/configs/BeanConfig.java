@@ -38,7 +38,7 @@ public class BeanConfig {
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate(new HttpComponentsClientHttpRequestFactory());
-    }
+    } // PATCH, PUT 메서드 지원
 
     @Lazy
     @Bean

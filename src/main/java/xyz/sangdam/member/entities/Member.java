@@ -17,16 +17,15 @@ public class Member extends BaseEntity {
     private String password; // 비밀번호
 
     @JsonAlias("userType")
-    private String _userType; // 사용자 구분
+    private String _userType; // 사용자 구분, UserType -> String으로(Enum은 매칭 안됨)
 
     private String userName; // 성명
     private String mobile; // 핸드폰 번호
 
     @JsonAlias("gender")
-    private String _gender; // 성별
-
-    private String deptNm; // 부서명 이자 학과명
-    private String deptNo; // 부서 번호
+    private String _gender; // 성별, Gender -> String으로(Enum은 매칭 안됨)
+    private String deptNm; // 부서명(학과명)
+    private String deptNo; // 부서번호
 
     /* 직원 관련 추가 정보 */
     private String empNo; // 사번

@@ -14,10 +14,10 @@ public class CounselingDeleteService {
     private final CounselingRepository repository;
     private final CounselingInfoService infoService;
 
-    public void delete(Long cNo) { // 외래키 제약 조건 때문에 완전 삭제가 불가능하므로 deletedAt 을 사용
+    public void delete(Long cNo) {
         Counseling data = infoService.get(cNo);
-        data.setDeletedAt(LocalDateTime.now());
+        data.setDeletedAt(LocalDateTime.now()); // 소프트 삭제
 
-        repository.saveAndFlush(data); // data 저장
+        repository.saveAndFlush(data);
     }
 }

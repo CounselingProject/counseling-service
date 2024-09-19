@@ -18,35 +18,29 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Reservation extends BaseEntity {
+public class Reservation extends BaseEntity { // 개인상담 + 예약
     @Id
     @GeneratedValue
-    private Long rNo; // 예약 접수 번호 -> 취소만 함 | cNo 는 집단 상담일 때 필요함
+    private Long rNo; // 예약 접수 번호
 
     @Column(length=20)
     @Enumerated(EnumType.STRING)
-    private Status status; // 진행 상태
+    private Status status; // 진행상태
 
     @Enumerated(EnumType.STRING)
     @Column(length=20)
-    private CounselingType counselingType; // 개인, 집단 상담 구분
+    private CounselingType counselingType; // 개인/집단상담 구분
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="cNo")
-    private Counseling counseling; // 집단 상담
-
-    @Column(length = 40, nullable = false)
-    private String userName; // 로그인 회원명
-
-    @Column(length = 80, nullable = false)
-    private String email; // 로그인 회원 이메일
+    private Counseling counseling; // 집단상담
 
     @Enumerated(EnumType.STRING)
     @Column(length=20)
-    private PersonalCategory category; // 개인 상담 종류
+    private PersonalCategory category; // 개인상담 분류
 
     @Column(length=60, nullable = false)
-    private String counselingName; // 개인 상담명(학생명(학번)님 개인 상담) + 집단 상담 프로그램명
+    private String counselingName; // 개인상담명(학생이름(학번)님 개인상담) + 집단상담 프로그램명
 
     @Column(length=20, nullable = false)
     private String counselorName; // 상담사명
@@ -54,8 +48,14 @@ public class Reservation extends BaseEntity {
     @Column(length=65, nullable = false)
     private String counselorEmail; // 상담사 이메일
 
+    @Column(length = 40, nullable = false)
+    private String userName; // 로그인한 학생명
+
+    @Column(length = 80, nullable = false)
+    private String email; // 로그인한 학생 이메일
+
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime rDateTime; // 예약 일시
+    private LocalDateTime rDateTime; // 예약일시
 
     @Lob
     private String reason; // 상담 사유

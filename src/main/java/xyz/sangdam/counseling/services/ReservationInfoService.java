@@ -14,7 +14,6 @@ import xyz.sangdam.member.entities.Member;
 @Service
 @RequiredArgsConstructor
 public class ReservationInfoService {
-
     private final ReservationRepository reservationRepository;
     private final MemberUtil memberUtil;
 
@@ -26,9 +25,9 @@ public class ReservationInfoService {
         BooleanBuilder andBuilder = new BooleanBuilder();
         QReservation reservation = QReservation.reservation;
         Member member = memberUtil.getMember();
-        if (memberUtil.isCounselor() || memberUtil.isProfessor()) { // 상담사 = Counselor & Professor
+        if (memberUtil.isCounselor() || memberUtil.isProfessor()) { // 상담사나 교수일 때 상담사 이메일로 본인 것만 조회
             andBuilder.and(reservation.counselorEmail.eq(member.getEmail()));
-        } else if (memberUtil.isStudent()) { // 학생
+        } else if (memberUtil.isStudent()) { // 학생일 때 학생 이메일로 본인 것만 조회
             andBuilder.and(reservation.email.eq(member.getEmail()));
         }
 
