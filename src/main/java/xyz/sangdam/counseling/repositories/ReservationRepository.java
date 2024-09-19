@@ -5,4 +5,6 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import xyz.sangdam.counseling.entities.Reservation;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long>, QuerydslPredicateExecutor<Reservation> {
+
+
 }

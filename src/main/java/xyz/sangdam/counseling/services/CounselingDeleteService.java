@@ -16,8 +16,9 @@ public class CounselingDeleteService {
 
     public void delete(Long cNo) {
         Counseling data = infoService.get(cNo);
-        data.setDeletedAt(LocalDateTime.now()); // 소프트 삭제
+        data.setDeletedAt(LocalDateTime.now());
 
         repository.saveAndFlush(data);
+        // 값이 안 보이게끔
     }
 }

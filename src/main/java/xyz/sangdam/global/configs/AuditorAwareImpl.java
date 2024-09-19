@@ -1,9 +1,9 @@
 package xyz.sangdam.global.configs;
 
 import lombok.RequiredArgsConstructor;
-import xyz.sangdam.member.MemberUtil;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
+import xyz.sangdam.member.MemberUtil;
 
 import java.util.Optional;
 

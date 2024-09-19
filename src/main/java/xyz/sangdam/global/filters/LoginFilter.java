@@ -8,7 +8,6 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -34,7 +33,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LoginFilter extends GenericFilterBean {
 
-    private final DiscoveryClient discoveryClient;
     private final RestTemplate restTemplate;
     private final ObjectMapper om;
     private final Utils utils;
