@@ -9,8 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import xyz.sangdam.counseling.entities.Counseling;
+import xyz.sangdam.counseling.entities.Reservation;
 import xyz.sangdam.counseling.services.CounselingInfoService;
 import xyz.sangdam.counseling.services.ReservationApplyService;
+import xyz.sangdam.counseling.services.ReservationInfoService;
 import xyz.sangdam.global.ListData;
 import xyz.sangdam.global.Utils;
 import xyz.sangdam.global.exceptions.BadRequestException;
@@ -27,6 +29,7 @@ public class CounselingController {
 
     private final CounselingInfoService counselingInfoService;
     private final ReservationApplyService reservationApplyService;
+    private final ReservationInfoService reservationInfoService;
     private final MemberUtil memberUtil;
     private final Utils utils;
 
@@ -62,20 +65,19 @@ public class CounselingController {
 
     @Operation(summary = "예약 신청 목록", method = "GET")
     @GetMapping("/apply")
-    public JSONData applyList(ReservationSearch search) {
+    public JSONData applyList(@ModelAttribute ReservationSearch search) {
         Member member = memberUtil.getMember();
         search.setEmail(List.of(member.getEmail()));
 
-        // 서비스 추가
-
-        return null;
+        ListData<Reservation> data = reservationInfoService.getList(search);
+        return new JSONData(data);
     }
 
     @Operation(summary="예약 신청 상세 정보", method = "GET")
     @GetMapping("/apply/{rNo}")
     public JSONData applyInfo(@PathVariable("rNo") Long rNo) {
-
-        return null;
+        Reservation item = reservationInfoService.get(rNo);
+        return new JSONData(item);
     }
 
     @Operation(summary = "예약 상태 변경", method="PATCH")
