@@ -8,9 +8,22 @@ import java.time.LocalDate;
 
 @Data
 public class CounselingSearch extends CommonSearch {
-    @DateTimeFormat(pattern="yyyy-MM-dd") // 쿼리스트링으로 값이 넘어옴
+    private int page = 1;
+    private int limit = 5;
+
+    private String sopt; // 검색 조건
+    private String skey; // 검색 키워드
+
+    private String counselingName; // 프로그램명
+
+    //JSON DATA로 들어오기 때문에 어떤형식인지 알려줘야 한다.
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     private LocalDate sDate;
 
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private LocalDate eDate;
+
+    private String sort; // 정렬 조건
+
+
 }
