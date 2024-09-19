@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import xyz.sangdam.counseling.controllers.ReservationSearch;
 import xyz.sangdam.counseling.entities.QReservation;
 import xyz.sangdam.counseling.entities.Reservation;
+import xyz.sangdam.counseling.exceptions.ReservationNotFoundException;
 import xyz.sangdam.counseling.repositories.ReservationRepository;
 import xyz.sangdam.global.ListData;
 import xyz.sangdam.member.MemberUtil;
@@ -18,7 +19,12 @@ public class ReservationInfoService {
     private final MemberUtil memberUtil;
 
     public Reservation get(Long rNo) {
-        return null;
+        Reservation item = reservationRepository.findById(rNo).orElseThrow(ReservationNotFoundException::new);
+
+        // 추가 데이터 처리
+        addInfo(item);
+
+        return item;
     }
 
     public ListData<Reservation> getList(ReservationSearch search) {
