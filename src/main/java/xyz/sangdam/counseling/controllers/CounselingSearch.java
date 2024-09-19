@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 @Data
 public class CounselingSearch extends CommonSearch {
+
     private int page = 1;
     private int limit = 5;
 
@@ -24,6 +25,4 @@ public class CounselingSearch extends CommonSearch {
     private LocalDate eDate;
 
     private String sort; // 정렬 조건
-
-
 }

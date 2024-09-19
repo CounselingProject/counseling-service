@@ -10,6 +10,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import xyz.sangdam.counseling.entities.Counseling;
 import xyz.sangdam.counseling.services.CounselingInfoService;
+import xyz.sangdam.counseling.services.ReservationApplyService;
 import xyz.sangdam.global.ListData;
 import xyz.sangdam.global.Utils;
 import xyz.sangdam.global.exceptions.BadRequestException;
@@ -25,6 +26,7 @@ import java.util.List;
 public class CounselingController {
 
     private final CounselingInfoService counselingInfoService;
+    private final ReservationApplyService reservationApplyService;
     private final MemberUtil memberUtil;
     private final Utils utils;
 
@@ -52,7 +54,8 @@ public class CounselingController {
             throw new BadRequestException(utils.getErrorMessages(errors));
         }
 
-        // 서비스 추가
+        // 예약 신청 처리
+        reservationApplyService.apply(form);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
