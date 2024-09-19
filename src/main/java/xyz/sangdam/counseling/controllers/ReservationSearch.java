@@ -7,8 +7,5 @@ import java.util.List;
 
 @Data
 public class ReservationSearch extends CommonSearch {
-
-    // 일반 소비자 페이지에서는 본인것만 보여야 하기 때문에 추가
-    private List<String> email;
-
+    private List<String> email; // 예약건은 본인 것만 조회해야 함
 }

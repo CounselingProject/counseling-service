@@ -19,17 +19,16 @@ import xyz.sangdam.member.entities.Member;
 
 import java.util.List;
 
-@Tag(name = "Counseling", description = "상담 API")
+@Tag(name="Counseling", description = "상담 API")
 @RestController
 @RequiredArgsConstructor
 public class CounselingController {
 
     private final CounselingInfoService counselingInfoService;
-    private final Utils utils;
     private final MemberUtil memberUtil;
+    private final Utils utils;
 
-    // 집단상담프로그램 조회 시에는 JsonData값으로 받아야 하니까 JSONdata
-    @Operation(summary = "집단상담 프로그램 조회", method = "GET")
+    @Operation(summary = "집단 상담 프로그램 조회", method="GET")
     @GetMapping("/counseling/info/{cNo}")
     public JSONData info(@PathVariable("cNo") Long cNo) {
         Counseling counseling = counselingInfoService.get(cNo);
@@ -37,7 +36,7 @@ public class CounselingController {
         return new JSONData(counseling);
     }
 
-    @Operation(summary = "집단 상담 프로그램 목록 조회 ", method = "GET")
+    @Operation(summary = "집단 상담 프로그램 목록 조회", method = "GET")
     @GetMapping("/counseling")
     public JSONData list(CounselingSearch search) {
         ListData<Counseling> data = counselingInfoService.getList(search);
@@ -45,27 +44,28 @@ public class CounselingController {
         return new JSONData(data);
     }
 
+    @Operation(summary = "예약 신청 접수", method = "POST")
+    @PostMapping("/apply")
     public ResponseEntity<Void> apply(@Valid @RequestBody RequestReservation form, Errors errors) {
-        // cNo 들어오면 집단 상담 날짜만 들어왔다 개인상담으로 구분
 
         if (errors.hasErrors()) {
             throw new BadRequestException(utils.getErrorMessages(errors));
-
         }
-        // 서비스 추가 예약 남은 서비스 말하시는 듯
+
+        // 서비스 추가
+
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Operation(summary = "예약 신청 목록", method = "GET")
     @GetMapping("/apply")
     public JSONData applyList(ReservationSearch search) {
-
         Member member = memberUtil.getMember();
         search.setEmail(List.of(member.getEmail()));
+
         // 서비스 추가
 
         return null;
-
     }
 
     @Operation(summary="예약 신청 상세 정보", method = "GET")

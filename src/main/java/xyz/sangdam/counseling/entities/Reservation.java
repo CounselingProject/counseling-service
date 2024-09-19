@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Reservation extends BaseEntity {
+public class Reservation extends BaseEntity { // 개인상담 + 예약
     @Id
     @GeneratedValue
     private Long rNo; // 예약 접수 번호
@@ -35,24 +35,24 @@ public class Reservation extends BaseEntity {
     @JoinColumn(name="cNo")
     private Counseling counseling; // 집단상담
 
-    @Column(length = 40, nullable = false)
-    private String userName; // 로그인 회원명
-
-    @Column(length = 80, nullable = false)
-    private String email; // 로그인 회원 이메일
-
     @Enumerated(EnumType.STRING)
     @Column(length=20)
-    private PersonalCategory category; // 개인상담 종류
+    private PersonalCategory category; // 개인상담 분류
 
     @Column(length=60, nullable = false)
-    private String counselingName; // 개인상담명(학생이름(학번)님 개인상담) + 집단 상담 프로그램명
+    private String counselingName; // 개인상담명(학생이름(학번)님 개인상담) + 집단상담 프로그램명
 
     @Column(length=20, nullable = false)
     private String counselorName; // 상담사명
 
     @Column(length=65, nullable = false)
     private String counselorEmail; // 상담사 이메일
+
+    @Column(length = 40, nullable = false)
+    private String userName; // 로그인한 학생명
+
+    @Column(length = 80, nullable = false)
+    private String email; // 로그인한 학생 이메일
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime rDateTime; // 예약일시

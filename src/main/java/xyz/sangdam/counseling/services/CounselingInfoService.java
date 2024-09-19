@@ -30,40 +30,36 @@ import static org.springframework.data.domain.Sort.Order.desc;
 @RequiredArgsConstructor
 public class CounselingInfoService {
     private final CounselingRepository repository;
-    private final FileInfoService fileinfoService;
+    private final FileInfoService fileInfoService;
     private final HttpServletRequest request;
 
-    public Counseling get(Long cNo)
-    // 집단상담 프로그램 개별조회
-    {
-
-        // 삭제를 하면 조회가 안되게끔 하기 위해서 상담정보에서 메서드 추가!
+    public Counseling get(Long cNo) {
         BooleanBuilder builder = new BooleanBuilder();
         QCounseling counseling = QCounseling.counseling;
         builder.and(counseling.cNo.eq(cNo))
-                .and(counseling.deletedAt.isNull());
+                .and(counseling.deletedAt.isNull()); // deletedAt이 null인 것만 조회(소프트 삭제)
 
         Counseling item = repository.findOne(builder).orElseThrow(CounselingNotFoundException::new);
 
+        // 추가 처리
+
+        addInfo(item);
+
         return item;
     }
-    // 집단상담 프로그램 목록조회 및 검색
 
     public ListData<Counseling> getList(CounselingSearch search) {
-
-        int page = Math.max(search.getPage(), 1); // 페이지가 0이거나 음수이면 1이 나오도록 설정  , 1 페이지부터 시작하게
-        int limit = search.getLimit(); // 한 페이지당 보여줄 레코드 개수
+        int page = Math.max(search.getPage(), 1);
+        int limit = search.getLimit();
         limit = limit < 1 ? 20 : limit;
-        int offset = (page - 1) * limit; // 레코드 시작 위치 구하기
 
         /* 검색 처리 S */
         BooleanBuilder andBuilder = new BooleanBuilder();
         QCounseling counseling = QCounseling.counseling;
-
         String sopt = search.getSopt();
         String skey = search.getSkey();
 
-        andBuilder.and(counseling.deletedAt.isNull());
+        andBuilder.and(counseling.deletedAt.isNull()); // deletedAt이 null인 것만 조회(소프트 삭제)
 
         sopt = StringUtils.hasText(sopt) ? sopt.toUpperCase() : "ALL";
         if (StringUtils.hasText(skey)) {
@@ -72,10 +68,11 @@ public class CounselingInfoService {
             if (sopt.equals("COUNSELING_NAME")) {
                 expression = counseling.counselingName;
             } else if (sopt.equals("COUNSELOR")) {
-                expression = counseling.counselorName.concat(counseling.counselorEmail);
-            } else {
-                // 통합검색
-                expression = counseling.counselingName.concat(counseling.counselorEmail).concat(counseling.counselorName);
+                expression = counseling.counselingName.concat(counseling.counselorEmail);
+            } else { // 통합 검색
+                expression = counseling.counselingName
+                        .concat(counseling.counselorEmail)
+                        .concat(counseling.counselorName);
             }
 
             if (expression != null) {
@@ -83,44 +80,39 @@ public class CounselingInfoService {
             }
         }
 
-        // 신청일 검색
-        LocalDate sDate = search.getSDate(); // 검색 시작일
-        LocalDate eDate = search.getEDate(); // 검색 종료일
-        if (sDate != null) {    // goe 크거나 같다 00시 (12시)
-            andBuilder.and(counseling.counselingDate.goe(sDate.atStartOfDay()));
-            if (eDate != null) { // 종료일 < 11시 > 59분까지 넣기 위해서
-                andBuilder.and(counseling.counselingDate.loe(eDate.atTime(LocalTime.MAX)));
-            }
+        // 상담일 검색
+        LocalDate sDate = search.getSDate();
+        LocalDate eDate = search.getEDate();
+        if (sDate != null) {
+            andBuilder.and(counseling.counselingDate.goe(sDate.atStartOfDay())); // atStartOfDay(하루의 시작 시간)
         }
 
+        if (eDate != null) {
+            andBuilder.and(counseling.counselingDate.loe(eDate.atTime(LocalTime.MAX))); // LocalDate에 시간 추가 - atTime, LocalTime.MAX(하루의 마지막 시간)
+
+        }
         /* 검색 처리 E */
 
-        // 페이지형태로 가져오기  , 스프링데이터에서 가져오는 페이지 번호는 0부터 시작하기 때문에 -1 해준 것
-        Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(desc("createAt")));
-
+        Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(desc("createdAt"))); // page -1 (pageable 첫번째 페이지 0부터 시작)
         Page<Counseling> data = repository.findAll(andBuilder, pageable);
 
         long total = repository.count(andBuilder);
-        Pagination pagination = new Pagination(page, (int) total, 10, limit, request);
+        Pagination pagination = new Pagination(page, (int)total, 10, limit, request);
 
         List<Counseling> items = data.getContent();
-        if (items != null && items.isEmpty()) {
+        if (items != null && !items.isEmpty()) {
             items.forEach(this::addInfo);
         }
 
         return new ListData<>(items, pagination);
-
     }
 
     private void addInfo(Counseling item) {
         try {
-            List<FileInfo> editorImages = fileinfoService.getList(item.getGid(), "editor");
+            List<FileInfo> editorImages = fileInfoService.getList(item.getGid(), "editor");
             item.setEditorImages(editorImages);
         } catch (Exception e) {
-
             e.printStackTrace();
         }
-
     }
 }
-
