@@ -10,6 +10,7 @@ import xyz.sangdam.counseling.repositories.CounselingRepository;
 import xyz.sangdam.counseling.services.CounselingSaveService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @SpringBootTest
 public class RegisterTest {
@@ -38,7 +39,7 @@ public class RegisterTest {
         form.setReservationSdate(LocalDate.of(2024, 9, 18));
         form.setReservationSdate(LocalDate.of(2024, 9, 20));
         form.setCounselingLimit(10);
-        //form.setCounselingDate(LocalDate.of(2024,9,29,14:30)); // 문제
+        form.setCounselingDate(LocalDateTime.of(2024,9,29,14,30));
 
     }
 
