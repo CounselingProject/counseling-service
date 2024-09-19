@@ -56,6 +56,8 @@ public class CounselingInfoService {
         /* 검색 처리 S */
         BooleanBuilder andBuilder = new BooleanBuilder();
         QCounseling counseling = QCounseling.counseling;
+
+        // 검색 옵션 및 키워드 처리
         String sopt = search.getSopt();
         String skey = search.getSkey();
 

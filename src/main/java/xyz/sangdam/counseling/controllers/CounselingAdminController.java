@@ -16,19 +16,21 @@ import xyz.sangdam.global.Utils;
 import xyz.sangdam.global.exceptions.BadRequestException;
 import xyz.sangdam.global.rests.JSONData;
 
-@Tag(name="CounselingAdmin", description = "상담 관리자 API")
+@Tag(name = "CounselingAdmin", description = "상담 관리자 API")
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
 public class CounselingAdminController {
     private final HttpServletRequest request;
     private final CounselingSaveService counselingSaveService;
+    private final Utils utils;
     private final CounselingInfoService counselingInfoService;
     private final CounselingDeleteService counselingDeleteService;
-    private final Utils utils;
 
-    @Operation(summary = "집단상담 등록/수정", description = "POST 방식 요청 - 등록, PATCH 방식 요청 - 수정")
-    @RequestMapping(path="/counseling", method = {RequestMethod.POST, RequestMethod.PATCH}) // 처음 등록할 때는 POST, 수정할 때는 PATCH
+
+    // 사이트에서 버튼을 누르면 응답을 엔티티 등록
+    @Operation(summary = "집단 상담프로그램 등록/수정", description = "POST 방식 요청 - 등록, PATCH 방식 -요청 -수정")
+    @RequestMapping(path = "/counseling", method = {RequestMethod.POST, RequestMethod.PATCH})
     public ResponseEntity<Void> save(@Valid @RequestBody RequestCounseling form, Errors errors) {
 
         if (errors.hasErrors()) {
@@ -36,23 +38,23 @@ public class CounselingAdminController {
         }
 
         counselingSaveService.save(form);
+
         HttpStatus status = request.getMethod().toUpperCase().equals("POST") ? HttpStatus.CREATED : HttpStatus.OK;
 
         return ResponseEntity.status(status).build();
     }
 
-    @Operation(summary = "집단상담 삭제", method="DELETE")
+        // 삭제라 반환값이 JSONDATA인지 상관없고 반환값도 필요치 않음
+    @Operation(summary = "집단 상담 프로그램 삭제 ", method = "DELETE")
     @DeleteMapping("/counseling/{cNo}")
     public void delete(@PathVariable("cNo") Long cNo) {
         counselingDeleteService.delete(cNo);
     }
-
-    @Operation(summary = "상담 예약 신청 목록")
+    @Operation(summary="상담 예약 신청 목록")
     @GetMapping("/reservation")
     public JSONData reservationList(ReservationSearch search) {
 
         return null;
-
     }
 
     @Operation(summary = "상담 예약 상태 변경")

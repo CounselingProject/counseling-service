@@ -1,6 +1,7 @@
 package xyz.sangdam.counseling.services;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import xyz.sangdam.counseling.controllers.RequestCounseling;
 import xyz.sangdam.counseling.entities.Counseling;
@@ -13,19 +14,21 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 public class CounselingSaveService {
+
     private final CounselingRepository repository;
+    private final ModelMapper modelMapper;
     private final FileUploadDoneService uploadDoneService;
 
-    public void save(RequestCounseling form) {  // 상담 등록
+    public void save(RequestCounseling form) {
+
         Long cNo = form.getCNo();
         String mode = Objects.requireNonNullElse(form.getMode(), "write");
-
         Counseling counseling = null;
         if (mode.equals("update") && cNo != null) {
             counseling = repository.findById(cNo).orElseThrow(CounselingNotFoundException::new);
         } else {
             counseling = new Counseling();
-            counseling.setGid(form.getGid()); // 등록과 수정을 같이 하기 때문에 builer 아닌 setter 사용
+            counseling.setGid(form.getGid()); // 파일 그룹아이디는 만들 때 처음 한번만 생성
         }
 
         counseling.setCounselingDes(form.getCounselingDes());
@@ -41,6 +44,6 @@ public class CounselingSaveService {
 
         repository.saveAndFlush(counseling);
 
-        uploadDoneService.process(form.getGid()); // 파일 업로드 완료 처리
+        uploadDoneService.process(form.getGid());
     }
 }
