@@ -1,6 +1,5 @@
 package xyz.sangdam.group;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +22,6 @@ public class RegisterTest {
 
     private RequestCounseling form;
 
-    @Autowired
-    private ObjectMapper om;
-
     @BeforeEach
     void init() {
         form = new RequestCounseling();
@@ -46,7 +42,7 @@ public class RegisterTest {
     @Test
     void saveTest() {
         saveService.save(form);
-        //RequestCounseling saved = repository.findById(form.getCNo()).orElse(null);
+
     }
 
 }
