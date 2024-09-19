@@ -44,7 +44,6 @@ public class CounselingAdminController {
         return ResponseEntity.status(status).build();
     }
 
-
         // 삭제라 반환값이 JSONDATA인지 상관없고 반환값도 필요치 않음
     @Operation(summary = "집단 상담 프로그램 삭제 ", method = "DELETE")
     @DeleteMapping("/counseling/{cNo}")

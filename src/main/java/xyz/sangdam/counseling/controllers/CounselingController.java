@@ -53,7 +53,6 @@ public class CounselingController {
 
         }
         // 서비스 추가 예약 남은 서비스 말하시는 듯
-
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
