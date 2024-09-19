@@ -1,9 +1,16 @@
 package xyz.sangdam.counseling.controllers;
 
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 import xyz.sangdam.global.CommonSearch;
+
+import java.time.LocalDate;
 
 @Data
 public class CounselingSearch extends CommonSearch {
-    private String counselingType; // InfoService 의 GetList - 개인, 집단, 전체 프로그램 목록 조회에서 사용
+    @DateTimeFormat(pattern="yyyy-MM-dd") // 쿼리스트링으로 값이 넘어옴
+    private LocalDate sDate;
+
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private LocalDate eDate;
 }
