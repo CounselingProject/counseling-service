@@ -16,4 +16,6 @@ public class ReservationSearch extends CommonSearch {
 
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private LocalDate eDate;
+
+    private List<String> status; // 진행상태
 }
