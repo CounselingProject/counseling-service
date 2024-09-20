@@ -1,14 +1,15 @@
 package xyz.sangdam.file.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import xyz.sangdam.global.Utils;
 import xyz.sangdam.global.exceptions.BadRequestException;
 import xyz.sangdam.global.rests.ApiRequest;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class FileUploadDoneService {
+
     private final ApiRequest apiRequest;
     private final Utils utils;
 

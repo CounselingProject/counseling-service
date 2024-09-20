@@ -8,12 +8,6 @@ import java.time.LocalDate;
 
 @Data
 public class CounselingSearch extends CommonSearch {
-    private int page = 1;
-    private int limit = 5;
-
-    private String sopt; // 검색 조건
-    private String skey; // 검색 키워드
-
     private String counselingName; // 프로그램명
 
     //JSON DATA로 들어오기 때문에 어떤형식인지 알려줘야 한다.
@@ -24,6 +18,4 @@ public class CounselingSearch extends CommonSearch {
     private LocalDate eDate;
 
     private String sort; // 정렬 조건
-
-
 }
