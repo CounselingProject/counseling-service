@@ -30,7 +30,7 @@ public class CounselingAdminController {
 
     // 사이트에서 버튼을 누르면 응답을 엔티티 등록
     @Operation(summary = "집단 상담프로그램 등록/수정", description = "POST 방식 요청 - 등록, PATCH 방식 -요청 -수정")
-    @RequestMapping(path = "/counseling", method = {RequestMethod.POST, RequestMethod.PATCH})
+    @RequestMapping(path = "/counseling/group", method = {RequestMethod.POST, RequestMethod.PATCH})
     public ResponseEntity<Void> save(@Valid @RequestBody RequestCounseling form, Errors errors) {
 
         if (errors.hasErrors()) {
