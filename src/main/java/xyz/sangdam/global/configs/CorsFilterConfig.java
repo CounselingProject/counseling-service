@@ -14,7 +14,6 @@ import java.util.List;
 @Configuration
 public class CorsFilterConfig {
 
-
     @Value("${cors.allow.origins}")
     private String allowedOrigins;
 
@@ -29,7 +28,6 @@ public class CorsFilterConfig {
         if (StringUtils.hasText(allowedOrigins)) {
             List<String> origins = Arrays.stream(allowedOrigins.split(",")).toList();
             config.setAllowedOrigins(origins);
-            config.setAllowCredentials(true);
         } else {
             config.addAllowedOrigin("*");
         }
