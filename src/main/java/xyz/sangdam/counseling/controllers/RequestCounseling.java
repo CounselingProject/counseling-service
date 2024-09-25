@@ -37,8 +37,8 @@ public class RequestCounseling {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate reservationEdate; // 신청 기간 종료 일시
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime counselingDate; // 상담일
+   // @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    private String counselingDate; // 상담일
 
     private int counselingLimit; // 정원
 }
