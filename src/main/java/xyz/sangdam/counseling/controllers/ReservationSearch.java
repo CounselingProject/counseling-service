@@ -1,5 +1,6 @@
 package xyz.sangdam.counseling.controllers;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 import xyz.sangdam.counseling.constants.CounselingType;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ReservationSearch extends CommonSearch {
     private List<String> email; // 예약건은 본인 것만 조회해야 함
 
