@@ -41,7 +41,7 @@ public class CounselingValidator implements Validator {
 
         // 당일 예약인 경우, 예약 시간이 신청 시간 이후만 가능
         if (form.getRDate().isEqual(today) && form.getRTime().isBefore(currentTime)) {
-            errors.rejectValue("rTime", errorCode, "예약 시간은 예약 신청 시간 이전은 불가능 합니다.");
+            errors.rejectValue("rTime", errorCode, "예약 시간의 경우 예약 신청 시간 이전은 불가능 합니다.");
         }
 
         // 중복 예약 검증
@@ -56,7 +56,7 @@ public class CounselingValidator implements Validator {
                 .fetch();
 
         if (!existingReservations.isEmpty()) {
-            errors.rejectValue("rTime", errorCode, "해당 시간에 이미 예약이 존재합니다.");
+            errors.rejectValue("rTime", errorCode, "해당 타임에 예약이 마감되었습니다.");
         }
     }
 }
