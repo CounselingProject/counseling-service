@@ -9,12 +9,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import xyz.sangdam.counseling.services.CounselingDeleteService;
-import xyz.sangdam.counseling.services.CounselingInfoService;
-import xyz.sangdam.counseling.services.CounselingSaveService;
+import xyz.sangdam.counseling.constants.Status;
+import xyz.sangdam.counseling.entities.Reservation;
+import xyz.sangdam.counseling.services.*;
+import xyz.sangdam.global.ListData;
 import xyz.sangdam.global.Utils;
 import xyz.sangdam.global.exceptions.BadRequestException;
 import xyz.sangdam.global.rests.JSONData;
+import xyz.sangdam.member.MemberUtil;
+import xyz.sangdam.member.entities.Member;
+
+import java.util.List;
 
 @Tag(name = "CounselingAdmin", description = "상담 관리자 API")
 @RestController
@@ -23,9 +28,12 @@ import xyz.sangdam.global.rests.JSONData;
 public class CounselingAdminController {
     private final HttpServletRequest request;
     private final CounselingSaveService counselingSaveService;
-    private final Utils utils;
     private final CounselingInfoService counselingInfoService;
     private final CounselingDeleteService counselingDeleteService;
+    private final ReservationInfoService reservationInfoService;
+    private final ReservationStatusService reservationStatusService;
+    private final MemberUtil memberUtil;
+    private final Utils utils;
 
 
     // 사이트에서 버튼을 누르면 응답을 엔티티 등록
@@ -48,18 +56,23 @@ public class CounselingAdminController {
     @Operation(summary = "집단 상담 프로그램 삭제 ", method = "DELETE")
     @DeleteMapping("/counseling/{cNo}")
     public void delete(@PathVariable("cNo") Long cNo) {
+
         counselingDeleteService.delete(cNo);
     }
-    @Operation(summary="상담 예약 신청 목록")
-    @GetMapping("/reservation")
-    public JSONData reservationList(ReservationSearch search) {
 
-        return null;
+    @Operation(summary = "예약 신청 목록", method = "GET")
+    @GetMapping("/apply")
+    public JSONData applyList(@ModelAttribute ReservationSearch search) {
+        Member member = memberUtil.getMember();
+        search.setEmail(List.of(member.getEmail()));
+
+        ListData<Reservation> data = reservationInfoService.getList(search);
+        return new JSONData(data);
     }
 
-    @Operation(summary = "상담 예약 상태 변경")
-    @PatchMapping("/reservation")
-    public void reservationStatusChange() {
-
+    @Operation(summary = "예약 상태 변경", method="GET")
+    @GetMapping("/apply/{rNo}/{status}")
+    public void applyChange(@PathVariable("rNo") Long rNo, @PathVariable("status") String status) {
+        reservationStatusService.change(rNo, Status.valueOf(status));
     }
 }
