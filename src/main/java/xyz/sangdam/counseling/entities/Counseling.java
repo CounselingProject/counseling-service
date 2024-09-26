@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import xyz.sangdam.counseling.constants.CounselingType;
 import xyz.sangdam.file.entities.FileInfo;
 import xyz.sangdam.global.entities.BaseMemberEntity;
 
@@ -28,6 +29,10 @@ public class Counseling extends BaseMemberEntity { // 집단상담
 
     @Column(length=60, nullable = false)
     private String counselingName; // 집단상담 프로그램명
+
+    @Enumerated(EnumType.STRING)
+    @Column(length=20)
+    private CounselingType counselingType; // 개인/집단상담 구분
 
     @Lob
     private String counselingDes; // 상담 설명
