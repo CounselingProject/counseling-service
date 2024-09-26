@@ -19,12 +19,6 @@ public class ReservationSearch extends CommonSearch {
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private LocalDate eDate;
 
-    @DateTimeFormat(pattern="HH:mm") // 쿼리스트링으로 값이 넘어옴
-    private LocalDate sTime;
-
-    @DateTimeFormat(pattern="HH:mm")
-    private LocalDate eTime;
-
     private CounselingType counselingType; // 개인/집단상담 구분
 
     private PersonalCategory category; // 개인상담 분류

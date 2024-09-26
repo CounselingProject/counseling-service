@@ -1,4 +1,4 @@
-package xyz.sangdam.group;
+package xyz.sangdam.counseling;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,6 @@ import xyz.sangdam.counseling.repositories.CounselingRepository;
 import xyz.sangdam.counseling.services.CounselingSaveService;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @SpringBootTest
 public class RegisterTest {
@@ -35,8 +34,7 @@ public class RegisterTest {
         form.setReservationSdate(LocalDate.of(2024, 9, 18));
         form.setReservationSdate(LocalDate.of(2024, 9, 20));
         form.setCounselingLimit(10);
-        form.setCounselingDate(LocalDateTime.of(2024,9,29,14,30));
-
+        //form.setCounselingDate(LocalDateTime.of(2024,9,29,14,30));
     }
 
     @Test
