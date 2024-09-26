@@ -8,6 +8,6 @@ import java.util.List;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RequestStatusChange {
-    private List<Long> rNo;
+    private List<Long> rno;
     private List<String> status;
 }

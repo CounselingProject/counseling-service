@@ -81,7 +81,7 @@ public class CounselingAdminController {
     @PatchMapping("/status/change")
     public void applyMultiChange(@RequestBody RequestStatusChange form) {
 
-        List<Long> rNos = form.getRNo();
+        List<Long> rNos = form.getRno();
         List<String> statuses = form.getStatus();
         for (int i = 0; i < rNos.size(); i++) {
             Status status = Status.valueOf(statuses.get(i));
