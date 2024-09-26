@@ -1,4 +1,4 @@
-package xyz.sangdam.counseling;
+package xyz.sangdam.group;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

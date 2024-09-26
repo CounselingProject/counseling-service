@@ -39,13 +39,13 @@ public class Reservation extends BaseEntity { // 개인상담 + 예약
     @Column(length=20)
     private PersonalCategory category; // 개인상담 분류
 
-    @Column(length=60, nullable = false)
+    @Column(length=60)
     private String counselingName; // 개인상담명(학생이름(학번)님 개인상담) + 집단상담 프로그램명
 
-    @Column(length=20, nullable = false)
+    @Column(length=20)
     private String counselorName; // 상담사명
 
-    @Column(length=65, nullable = false)
+    @Column(length=65)
     private String counselorEmail; // 상담사 이메일
 
     @Column(length = 40, nullable = false)
