@@ -2,6 +2,7 @@ package xyz.sangdam.counseling.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import xyz.sangdam.counseling.constants.CounselingType;
 import xyz.sangdam.counseling.constants.PersonalCategory;
 import xyz.sangdam.counseling.constants.Status;
 import xyz.sangdam.counseling.controllers.RequestReservation;
@@ -57,11 +58,12 @@ public class ReservationApplyService {
             reservation.setCounselingName(counseling.getCounselingName()); // 상담 프로그램명
             reservation.setCounselorName(counseling.getCounselorName()); // 상담사명
             reservation.setCounselorEmail(counseling.getCounselorEmail()); // 상담사 이메일
+            reservation.setCounselingType(CounselingType.GROUP);
         } else { // 개인 상담인 경우 구분
             PersonalCategory category = form.getCategory() != null ? PersonalCategory.valueOf(form.getCategory()) : null;
 
             reservation.setCategory(category); // 개인 상담 분류
-
+            reservation.setCounselingType(CounselingType.PERSONAL);
             String counselingName;
             switch (category) {
                 case PROFESSOR:
