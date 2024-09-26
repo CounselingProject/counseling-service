@@ -3,12 +3,15 @@ package xyz.sangdam.counseling.services;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import xyz.sangdam.counseling.controllers.RequestCounseling;
 import xyz.sangdam.counseling.entities.Counseling;
 import xyz.sangdam.counseling.exceptions.CounselingNotFoundException;
 import xyz.sangdam.counseling.repositories.CounselingRepository;
 import xyz.sangdam.file.services.FileUploadDoneService;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 @Service
@@ -39,7 +42,11 @@ public class CounselingSaveService {
         counseling.setReservationSdate(form.getReservationSdate());
         counseling.setReservationEdate(form.getReservationEdate());
 
-        counseling.setCounselingDate(form.getCounselingDate());
+        String counselingDate = form.getCounselingDate();
+        if (StringUtils.hasText(counselingDate)) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            counseling.setCounselingDate(LocalDateTime.parse(counselingDate, formatter));
+        }
         counseling.setCounselingLimit(form.getCounselingLimit());
 
         repository.saveAndFlush(counseling);
