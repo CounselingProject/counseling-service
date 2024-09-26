@@ -64,7 +64,8 @@ public class ReservationApplyService {
 
             reservation.setCategory(category); // 개인 상담 분류
             reservation.setCounselingType(CounselingType.PERSONAL);
-            String counselingName;
+            String counselingName = null;
+
             switch (category) {
                 case PROFESSOR:
                     counselingName = "교수 상담";
@@ -80,6 +81,10 @@ public class ReservationApplyService {
             }
 
             reservation.setCounselingName(counselingName); // 개인 상담별 구분
+
+            reservation.setCounselingName(form.getCounselorName());
+            reservation.setCounselorEmail(form.getCounselorEmail());
+
         }
 
         reservationRepository.saveAndFlush(reservation);

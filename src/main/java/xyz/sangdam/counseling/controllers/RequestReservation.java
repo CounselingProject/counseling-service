@@ -24,4 +24,7 @@ public class RequestReservation {
     private LocalTime rtime; // 예약 시간
 
     private String reason; // 상담 사유
+
+    private String counselorName;
+    private String counselorEmail;
 }
