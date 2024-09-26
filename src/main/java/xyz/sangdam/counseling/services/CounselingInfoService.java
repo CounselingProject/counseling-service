@@ -13,8 +13,10 @@ import org.springframework.util.StringUtils;
 import xyz.sangdam.counseling.controllers.CounselingSearch;
 import xyz.sangdam.counseling.entities.Counseling;
 import xyz.sangdam.counseling.entities.QCounseling;
+import xyz.sangdam.counseling.entities.QReservation;
 import xyz.sangdam.counseling.exceptions.CounselingNotFoundException;
 import xyz.sangdam.counseling.repositories.CounselingRepository;
+import xyz.sangdam.counseling.repositories.ReservationRepository;
 import xyz.sangdam.file.entities.FileInfo;
 import xyz.sangdam.file.services.FileInfoService;
 import xyz.sangdam.global.ListData;
@@ -32,6 +34,7 @@ public class CounselingInfoService {
     private final CounselingRepository repository;
     private final FileInfoService fileInfoService;
     private final HttpServletRequest request;
+    private final ReservationRepository reservationRepository;
 
     public Counseling get(Long cNo) {
         BooleanBuilder builder = new BooleanBuilder();
@@ -116,5 +119,12 @@ public class CounselingInfoService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        // 집단 상담 신청 인원수
+        QReservation reservation = QReservation.reservation;
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(reservation.counseling.cNo.eq(item.getCNo()));
+        long applicationsCount = reservationRepository.count(builder);
+        item.setApplicantsCount(applicationsCount);
     }
 }
