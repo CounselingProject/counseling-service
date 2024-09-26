@@ -8,6 +8,7 @@ import xyz.sangdam.counseling.constants.PersonalCategory;
 import xyz.sangdam.global.CommonSearch;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Data
@@ -22,10 +23,10 @@ public class ReservationSearch extends CommonSearch {
     private LocalDate eDate;
 
     @DateTimeFormat(pattern="HH:mm") // 쿼리스트링으로 값이 넘어옴
-    private LocalDate sTime;
+    private LocalTime sTime;
 
     @DateTimeFormat(pattern="HH:mm")
-    private LocalDate eTime;
+    private LocalTime eTime;
 
     private CounselingType counselingType; // 개인/집단상담 구분
 
