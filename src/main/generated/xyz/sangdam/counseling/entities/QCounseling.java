@@ -31,6 +31,8 @@ public class QCounseling extends EntityPathBase<Counseling> {
 
     public final StringPath counselingName = createString("counselingName");
 
+    public final EnumPath<xyz.sangdam.counseling.constants.CounselingType> counselingType = createEnum("counselingType", xyz.sangdam.counseling.constants.CounselingType.class);
+
     public final StringPath counselorEmail = createString("counselorEmail");
 
     public final StringPath counselorName = createString("counselorName");
