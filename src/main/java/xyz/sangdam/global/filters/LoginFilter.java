@@ -27,6 +27,7 @@ import xyz.sangdam.member.constants.UserType;
 import xyz.sangdam.member.entities.Member;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -73,7 +74,8 @@ public class LoginFilter extends GenericFilterBean {
                     Member member = om.readValue(json, Member.class);
 
                     UserType userType = member.getUserType();
-                    List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(userType.name()));
+                    List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+                    authorities.add(new SimpleGrantedAuthority(userType.name()));
                     if (userType == UserType.PROFESSOR) {
                         authorities.add(new SimpleGrantedAuthority(UserType.COUNSELOR.name()));
                     }

@@ -56,4 +56,7 @@ public class Counseling extends BaseMemberEntity { // 집단상담
 
     @Transient
     private List<FileInfo> editorImages;
+
+    @Transient
+    private long applicantsCount;
 }

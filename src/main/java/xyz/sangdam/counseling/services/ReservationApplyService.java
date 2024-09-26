@@ -2,6 +2,7 @@ package xyz.sangdam.counseling.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import xyz.sangdam.counseling.constants.CounselingType;
 import xyz.sangdam.counseling.constants.PersonalCategory;
 import xyz.sangdam.counseling.constants.Status;
 import xyz.sangdam.counseling.controllers.RequestReservation;
@@ -25,19 +26,19 @@ public class ReservationApplyService {
 
     public void apply(RequestReservation form) {
         // 로그인 여부 및 상담 예약 날짜 확인
-        if (!memberUtil.isLogin() || form.getRDate() == null || form.getRDate().isBefore(LocalDate.now())) {
+        if (!memberUtil.isLogin() || form.getRdate() == null || form.getRdate().isBefore(LocalDate.now())) {
             throw new BadRequestException("접근이 올바르지 않습니다.");
         }
 
         // 상담 프로그램 조회
-        Long cNo = form.getCNo(); // 집단 상담 프로그램 번호 (개인 상담일 경우 null일 수 있음)
+        Long cNo = form.getCno(); // 집단 상담 프로그램 번호 (개인 상담일 경우 null일 수 있음)
         Counseling counseling = null;
         if (cNo != null) {
             counseling = counselingInfoService.get(cNo); // 집단 상담 프로그램 조회
         }
 
         // 예약 날짜와 시간 설정
-        LocalDateTime reservationDateTime = LocalDateTime.of(form.getRDate(), form.getRTime());
+        LocalDateTime reservationDateTime = LocalDateTime.of(form.getRdate(), form.getRtime());
 
         // 회원 정보
         Member member = memberUtil.getMember();
@@ -57,11 +58,12 @@ public class ReservationApplyService {
             reservation.setCounselingName(counseling.getCounselingName()); // 상담 프로그램명
             reservation.setCounselorName(counseling.getCounselorName()); // 상담사명
             reservation.setCounselorEmail(counseling.getCounselorEmail()); // 상담사 이메일
+            reservation.setCounselingType(CounselingType.GROUP);
         } else { // 개인 상담인 경우 구분
             PersonalCategory category = form.getCategory() != null ? PersonalCategory.valueOf(form.getCategory()) : null;
 
             reservation.setCategory(category); // 개인 상담 분류
-
+            reservation.setCounselingType(CounselingType.PERSONAL);
             String counselingName;
             switch (category) {
                 case PROFESSOR:
