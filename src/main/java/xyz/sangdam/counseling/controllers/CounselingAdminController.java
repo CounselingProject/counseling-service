@@ -75,4 +75,17 @@ public class CounselingAdminController {
     public void applyChange(@PathVariable("rNo") Long rNo, @PathVariable("status") String status) {
         reservationStatusService.change(rNo, Status.valueOf(status));
     }
+
+
+    @Operation(summary = "예약 상태 변경(여러개)", method="PATCH")
+    @PatchMapping("/status/change")
+    public void applyMultiChange(@RequestBody RequestStatusChange form) {
+
+        List<Long> rNos = form.getRNo();
+        List<String> statuses = form.getStatus();
+        for (int i = 0; i < rNos.size(); i++) {
+            Status status = Status.valueOf(statuses.get(i));
+            reservationStatusService.change(rNos.get(i), status);
+        }
+    }
 }
