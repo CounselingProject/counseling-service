@@ -35,17 +35,17 @@ public class CounselingValidator implements Validator {
         String errorCode = "불가능한 예약 입니다.";
 
         // 예약일 검증 : 과거 날짜에 예약 불가
-        if (form.getRDate().isBefore(today)) {
+        if (form.getRdate().isBefore(today)) {
             errors.rejectValue("rDate", errorCode, "신청 당일 기준으로 이전 날짜 신청은 불가능 합니다.");
         }
 
         // 당일 예약인 경우, 예약 시간이 신청 시간 이후만 가능
-        if (form.getRDate().isEqual(today) && form.getRTime().isBefore(currentTime)) {
+        if (form.getRdate().isEqual(today) && form.getRtime().isBefore(currentTime)) {
             errors.rejectValue("rTime", errorCode, "예약 시간의 경우 예약 신청 시간 이전은 불가능 합니다.");
         }
 
         // 중복 예약 검증
-        LocalDateTime reservationDateTime = LocalDateTime.of(form.getRDate(), form.getRTime());
+        LocalDateTime reservationDateTime = LocalDateTime.of(form.getRdate(), form.getRtime());
         QReservation reservation = QReservation.reservation;
 
         BooleanBuilder builder = new BooleanBuilder();

@@ -35,19 +35,19 @@ public class ReservationValidator implements Validator {
 
         String errorCode = "NotAvailable.reservation";
         // 예약일 검증
-        if (form.getRDate().isBefore(today)) {
+        if (form.getRdate().isBefore(today)) {
             errors.rejectValue("rDate", errorCode);
         }
 
         // 예약시간 검증
-        if (form.getRDate().isEqual(today) && form.getRTime().isBefore(currentTime)) {
+        if (form.getRdate().isEqual(today) && form.getRtime().isBefore(currentTime)) {
             errors.rejectValue("rTime",errorCode);
         }
 
         // 중복 예약 검증
         QReservation reservation = QReservation.reservation;
         BooleanBuilder builder = new BooleanBuilder();
-        builder.and(reservation.rDateTime.eq(form.getRDate().atTime(form.getRTime())));
+        builder.and(reservation.rDateTime.eq(form.getRdate().atTime(form.getRtime())));
 
         List<Reservation> dateVerification = queryFactory.selectFrom(reservation)
                 .where(builder)
