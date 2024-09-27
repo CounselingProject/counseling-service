@@ -31,7 +31,7 @@ public class Reservation extends BaseEntity { // 개인상담 + 예약
     @Column(length=20)
     private CounselingType counselingType; // 개인/집단상담 구분
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="cNo")
     private Counseling counseling; // 집단상담
 
